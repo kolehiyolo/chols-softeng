@@ -50,7 +50,6 @@ router.route('/:id').get(
     console.log('GET /tasks/'+req.params.id);
     Task.findById(req.params.id)
       .then(task => {
-        console.log(res)
         res.json(task)
       })
       .catch(err => res.status(400).json(`Error: ${err}`));
@@ -69,21 +68,44 @@ router.route('/:id').delete(
 // * Update one Task by ID
 router.route('/update/:id').post(
   (req, res) => {
-    Task.findById(req.params.id)
-      .then(
-        task => {
-          task.name = req.body.name;
-          task.start = Date.parse(req.body.date);
-          task.due = Date.parse(req.body.date);
-          task.done = req.body.done;
-          task.owner = req.body.owner;
-          task.project = req.body.project;
-          task.priority = req.body.priority;
-          task.description = req.body.description;
+    console.log('POST /update/'+req.params.id);
+    res.send('Hello');
+    // Task.findById(req.params.id)
+    //   .then(
+    //     task => {
+    //       task.name = req.body.name;
+    //       task.start = Date.parse(req.body.date);
+    //       task.due = Date.parse(req.body.date);
+    //       task.done = req.body.done;
+    //       task.owner = req.body.owner;
+    //       task.project = req.body.project;
+    //       task.priority = req.body.priority;
+    //       task.description = req.body.description;
 
-          task.save()
-            .then(() => res.json('Task updated!'))
-            .catch(err => res.status(400).json(`Error: ${err}`));
+    //       task.save()
+    //         .then(() => res.json('Task updated!'))
+    //         .catch(err => res.status(400).json(`Error: ${err}`));
+    //     }
+    //   )
+    //   .catch(err => res.status(400).json(`Error: ${err}`));
+  }
+);
+
+// * Check one Task by ID
+router.route('/check/:id').post(
+  (req, res) => {
+    const done = req.body.done;
+    console.log('POST /check/'+ req.params.id);
+
+    Task.findByIdAndUpdate(req.params.id, { done }, { new: true })
+      .then(
+        updatedTask => {
+          console.log('TASK UPDATED: ' + done);
+          if (updatedTask) {
+            res.json('Task updated!');
+          } else {
+            res.status(404).json('Task not found');
+          }
         }
       )
       .catch(err => res.status(400).json(`Error: ${err}`));

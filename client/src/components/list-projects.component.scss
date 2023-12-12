@@ -1,0 +1,27 @@
+.list-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  
+  .head {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .body {
+    .project {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      
+      .tasks {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+      }
+    }
+  }
+
+}
