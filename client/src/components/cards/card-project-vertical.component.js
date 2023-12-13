@@ -3,8 +3,8 @@ import React, {useState, useEffect} from "react";
 import axios from 'axios';
 
 // * Importing other Components
-import CardProjectInfo from './section-project-info.component.js';
-import CardProjectTasks from './section-project-tasks.component.js';
+import CardProjectInfo from '../sections/section-project-info.component.js';
+import CardProjectTasks from '../sections/section-project-tasks.component.js';
 // import CardTask from './card-task.component.js';
 
 // * Importing images/SVG

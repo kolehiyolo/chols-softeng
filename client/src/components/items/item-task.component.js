@@ -6,10 +6,10 @@ import axios from 'axios';
 import ItemAvatarCircle from './item-avatar-circle.component.js';
 
 // * Importing images/SVG
-import { ReactComponent as SVGTickMineDone } from '../svg/tick-mine-done.svg';
-import { ReactComponent as SVGTickMineNotDone } from '../svg/tick-mine-not-done.svg';
-import { ReactComponent as SVGTickOthersDone } from '../svg/tick-others-done.svg';
-import { ReactComponent as SVGTickOthersNotDone } from '../svg/tick-others-not-done.svg';
+import { ReactComponent as SVGTickMineDone } from '../../svg/tick-mine-done.svg';
+import { ReactComponent as SVGTickMineNotDone } from '../../svg/tick-mine-not-done.svg';
+import { ReactComponent as SVGTickOthersDone } from '../../svg/tick-others-done.svg';
+import { ReactComponent as SVGTickOthersNotDone } from '../../svg/tick-others-not-done.svg';
 
 // * Stylesheets
 import './item-task.component.scss';

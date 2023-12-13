@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // * Importing other Components
 // import CardProjectInfo from './section-project-info.component.js';
-import ItemTask from './item-task.component.js';
+import ItemTask from '../items/item-task.component.js';
 // import CardTask from './card-task.component.js';
 
 // * Importing images/SVG

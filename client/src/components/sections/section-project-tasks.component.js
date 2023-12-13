@@ -3,7 +3,7 @@ import React, {useState, useEffect} from "react";
 import axios from 'axios';
 
 // * Importing other Components
-import ItemTask from './item-task.component.js';
+import ItemTask from '../items/item-task.component.js';
 
 // * Importing images/SVG
 // import { ReactComponent as SVGCheck } from '../svg/check-circle.svg';

@@ -4,8 +4,8 @@ import axios from 'axios';
 import {useParams} from "react-router-dom";
 
 // * Importing other Components
-import CardProjectInfo from './card-project-info.component.js';
-import CardProjectTasks from './card-project-tasks.component.js';
+import CardProjectInfo from '../cards/card-project-info.component.js';
+import CardProjectTasks from '../cards/card-project-tasks.component.js';
 // import CardTask from './card-task.component.js';
 
 // * Importing images/SVG

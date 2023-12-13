@@ -3,7 +3,7 @@ import React, {useState, useEffect} from "react";
 import axios from 'axios';
 
 // * Importing other Components
-import ItemAvatarCircle from './item-avatar-circle.component.js';
+import ItemAvatarCircle from '../items/item-avatar-circle.component.js';
 // import CardTask from './card-task.component.js';
 
 // * Importing images/SVG

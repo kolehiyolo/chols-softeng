@@ -3,7 +3,7 @@ import React, {useState, useEffect} from "react";
 import axios from 'axios';
 
 // * Importing other Components
-import CardProjectVertical from './card-project-vertical.component.js';
+import CardProjectVertical from '../cards/card-project-vertical.component.js';
 // import CardTask from './card-task.component.js';
 
 // * Importing images/SVG
