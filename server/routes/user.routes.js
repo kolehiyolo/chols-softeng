@@ -114,6 +114,16 @@ router.route('/add').post(
   (req, res) => {
     console.log('POST /users/add'); 
 
+    // -* Sample accepted req.body data:
+    const sample = {
+      name_first: 'Juan',
+      name_last: 'Dela Cruz',
+      main_role: 'Developer',
+      username: "johnWitDaCross01",
+      password: "password1234",
+      email: "email@email.com",
+    };
+
     const name = {
       first: req.body.name_first,
       last: req.body.name_last
@@ -165,6 +175,17 @@ router.route('/update/:id').post(
   (req, res) => {
     console.log('POST /users/update/' + req.params.id);
 
+    // -* Sample accepted req.body data:
+    const sample = {
+      name_first: 'Juan',
+      name_last: 'Dela Cruz',
+      main_role: 'Developer',
+      profile_picture: 'profileUrl',
+      username: "johnWitDaCross01",
+      password: "password1234",
+      email: "email@email.com"
+    };
+
     User.findById(req.params.id)
       .then(
         user => {
@@ -213,6 +234,15 @@ router.route('/update/projects/:id').post(
   (req, res) => {
     console.log('POST /users/update/projects/' + req.params.id);
 
+    // -* Sample accepted req.body data:
+    const sample = {
+      projects: [
+        'projectID-1',
+        'projectID-2',
+        'projectID-3'
+      ]
+    };
+
     User.findById(req.params.id)
       .then(
         user => {
@@ -249,6 +279,15 @@ router.route('/update/friends/:id').post(
   (req, res) => {
     console.log('POST /users/update/friends/' + req.params.id);
 
+    // -* Sample accepted req.body data:
+    const sample = {
+      friends: [
+        'userID-1',
+        'userID-2',
+        'userID-3'
+      ]
+    };
+    
     User.findById(req.params.id)
       .then(
         user => {
