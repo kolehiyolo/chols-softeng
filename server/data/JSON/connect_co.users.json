@@ -13,7 +13,17 @@
   "username": "futurePirateKing01",
   "password": "12341234",
   "email": "luffy@strawhat.com",
-  "friends": []
+  "friends": [
+    "65773bd49407d34564bd6edb",
+    "65773c449407d34564bd6edc",
+    "65773c7c9407d34564bd6edd",
+    "65773d2b9407d34564bd6ede",
+    "65773d819407d34564bd6edf",
+    "65773dcf9407d34564bd6ee0",
+    "65773e179407d34564bd6ee1",
+    "65773e599407d34564bd6ee2",
+    "65773ebf9407d34564bd6ee3"
+  ]
 },
 {
   "_id": {
