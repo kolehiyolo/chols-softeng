@@ -1,5 +1,11 @@
-.section-project-info {
+.card-project-info {
+  min-width: 400px; 
+  max-width: 400px; 
+  flex-grow: 1;
+  align-self: flex-start;
+  
   .card-body {
+    width: 400px; 
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -51,27 +57,16 @@
         width: 100%;
         gap: 10px;
         justify-content: space-between;
-        
-        .left {
-          display: flex;
-          flex-direction: row;
-          // width: 100%;
-          gap: 10px;
-          align-items: center;
-          
-          span {
-            font-size: 15px;
-            // display: flex;
-            // flex-direction: row;
-            // align-items: center;
-
-          }
-        }
 
         .right {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
           .members {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
+            gap: 10px;
             width: 100%;
           }
         }

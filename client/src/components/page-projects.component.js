@@ -13,9 +13,10 @@ import CardProjectVertical from './card-project-vertical.component.js';
 // * Stylesheets
 import './page-projects.component.scss';
 
-export default function PageProjects() {
+export default function PageProjects(props) {
   console.log('MOUNT PageProjects()');
   const [projects, setProjects] = useState([]);
+  const [filterMode, setFilterMode] = useState('All Projects');
 
   // * Fetch Projects from DB on mount
   useEffect(
@@ -42,33 +43,74 @@ export default function PageProjects() {
   // * When "Add New" is clicked
   function onAddNewClick() {
     console.log(`RUN PageProjects -> onAddNewClick()`); 
+    window.location.href='/projects/new';
   };
 
   // * 
   function generateProjectVertical(projectData) {
     return (
       <CardProjectVertical 
+        currentUser={props.currentUser}
         projectData={projectData}
         key={projectData._id}  
+        filterMode={filterMode}
       />
     )
   }
+
+  function handleToggleChange(event) {
+    setFilterMode(event.target.value);
+  };
 
   // * Render
   return (
     <div className='page-projects'>
       <div className='head'>
         <h3>Projects</h3>
-        <button 
-          className="btn btn-primary"
-          onClick={
-            () => {
-              onAddNewClick();
+        <div className='buttons'>
+          <button 
+            className="btn btn-primary"
+            onClick={
+              () => {
+                onAddNewClick();
+              }
             }
-          }
-          >
-          Add New
-        </button>
+            >
+            Add New
+          </button>
+          <div className="task-filter-toggle btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input 
+              type="radio"
+              className="btn-check"
+              name="btnradio-projects-filter"
+              id="btnradio-projects-filter-1"
+              autoComplete="off"
+              checked={filterMode === 'All Projects'}
+              onChange={handleToggleChange}
+              value="All Projects"
+            />
+            <label 
+              className="btn btn-outline-primary" htmlFor="btnradio-projects-filter-1"
+            >
+              All Projects
+            </label>
+            <input 
+              type="radio"
+              className="btn-check"
+              name="btnradio-projects-filter"
+              id="btnradio-projects-filter-2"
+              autoComplete="off"
+              checked={filterMode === 'Not Done'}
+              onChange={handleToggleChange}
+              value="Not Done"              
+            />
+            <label 
+              className="btn btn-outline-primary" htmlFor="btnradio-projects-filter-2"
+            >
+              Not Done
+            </label>
+          </div>
+        </div>
       </div>
       <div className='body'>
         {

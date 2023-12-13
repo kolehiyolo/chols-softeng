@@ -14,8 +14,7 @@ import axios from 'axios';
 import './item-avatar-circle.component.scss';
 
 export default function ItemAvatarCircle(props) {
-  console.log('MOUNT ItemAvatarCircle()');
-  console.log(props.userID);
+  // console.log('MOUNT ItemAvatarCircle()');
   const [avatarUrl, setAvatarUrl] = useState('');
 
   useEffect(() => {

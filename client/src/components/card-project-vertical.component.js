@@ -15,38 +15,30 @@ import CardProjectTasks from './section-project-tasks.component.js';
 import './card-project-vertical.component.scss';
 
 export default function CardProjectVertical(props) {
-  console.log('MOUNT CardProjectVertical()');
-  // const [projects, setProjects] = useState([]);
+  // console.log('MOUNT CardProjectVertical()');
+  const [doneStatus, setDoneStatus] = useState(props.projectData.done);
+  
+  
+  function updateDoneStatus(passedDoneStatus) {
+    setDoneStatus(passedDoneStatus);
+  };
 
   // * Render
   return (
-    <div 
-      className='card card-project-vertical'
-      id={'card-project-vertical-'+props.projectData._id}
-    >
-      <CardProjectInfo 
-        projectData={props.projectData}
-      />
-      {/* <CardProjectTasks 
-        projectData={props.projectData}
-      /> */}
-      {/* <div className='head'>
-        <h3>Projects</h3>
-        <button 
-          className="btn btn-primary"
-          onClick={
-            () => {
-            }
-          }
-          >
-          Add New
-        </button>
+    (props.filterMode == 'Not Done' && doneStatus)
+    ? ''
+    : <div 
+        className='card card-project-vertical'
+        id={'card-project-vertical-'+props.projectData._id}
+      >
+        <CardProjectInfo 
+          projectData={props.projectData}
+        />
+        <CardProjectTasks 
+          projectData={props.projectData}
+          currentUser={props.currentUser}
+          updateDoneStatus={updateDoneStatus}
+        />
       </div>
-      <div className='body'>
-        {
-          projects.map(generateProject)
-        }
-      </div> */}
-    </div>
   );
-}
+};

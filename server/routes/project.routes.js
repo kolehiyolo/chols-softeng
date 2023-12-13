@@ -143,7 +143,7 @@ router.route('/:id').delete(
 // POST http://localhost:5000/projects/update/:id
 router.route('/update/:id').post(
   (req, res) => {
-    console.log('POST /project/update/' + req.params.id);
+    console.log('POST /projects/update/' + req.params.id);
     
     // -* Sample accepted req.body data:
     const sample = {
@@ -210,6 +210,37 @@ router.route('/update/:id').post(
         console.log(`\n`);
         res.status(400).json(`Error: ${err}`);
       });
+  }
+);
+
+// * Update one Project's done state by ID
+// ! Can't Test with Postman
+// POST http://localhost:5000/projects/done/:id
+router.route('/done/:id').post(
+  (req, res) => {
+    console.log('POST /projects/done/' + req.params.id);
+    const done = req.body.done;
+
+    // -* Sample accepted req.body data:
+    const sample = {
+      done: false
+    };
+
+    Project.findByIdAndUpdate(req.params.id, { done: done }, { new: true })
+    .then(
+      updatedProject => {
+        console.log(` - Project ${updatedProject.name} Found! `);
+
+        console.log(` - Success! Project's done value updated to ${done}`);
+        console.log(`\n`);
+        res.json(`Success! Project's done value updated`);
+      }
+    )
+    .catch(err => {
+      console.log(` - Failure! Didn't update Project's done value`);
+      console.log(`\n`);
+      res.status(400).json(`Error: ${err}`);
+    });
   }
 );
 

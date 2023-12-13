@@ -193,7 +193,7 @@ router.route('/check/:id').post(
         updatedTask => {
           console.log(` - Task ${updatedTask.name} Found! `);
 
-          console.log(` - Success! Task's done value updated`);
+          console.log(` - Success! Task's done value updated to ${done}`);
           console.log(`\n`);
           res.json(`Success! Task's done value updated`);
         }
