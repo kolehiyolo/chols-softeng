@@ -25,8 +25,7 @@ export default function PageProject(props) {
   useEffect(
     () =>{
       fetchProjectData();
-    },
-    []
+    }
   );
 
   // * This fetches all Projects from DB
@@ -73,7 +72,7 @@ export default function PageProject(props) {
           projectData={projectData}
         />
         {
-          (projectData.length != 0)
+          (projectData.length !== 0)
           ? <CardProjectTasks 
               projectData={projectData}
               currentUser={props.currentUser}

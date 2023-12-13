@@ -1,10 +1,11 @@
 // * Dependencies
-import React, {useState, useEffect} from "react";
-import axios from 'axios';
+// import React, {useState, useEffect} from "react";
+import React from "react";
+// import axios from 'axios';
 
 // * Importing other Components
-import CardProjectInfo from '../cards/card-project-info.component.js';
-import CardProjectTasks from '../cards/card-project-tasks.component.js';
+// import CardProjectInfo from '../cards/card-project-info.component.js';
+// import CardProjectTasks from '../cards/card-project-tasks.component.js';
 // import CardTask from './card-task.component.js';
 
 // * Importing images/SVG

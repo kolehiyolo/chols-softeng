@@ -28,7 +28,7 @@ export default function ItemTask(props) {
     () =>{
       fetchTaskData(props.taskID);
     },
-    []
+    [props.taskID]
   );
 
   function fetchTaskData(taskID) {
@@ -55,7 +55,7 @@ export default function ItemTask(props) {
 
   // * Render
   return (
-    (props.filterMode == 'My Tasks' && taskData.owner != props.currentUser)
+    (props.filterMode === 'My Tasks' && taskData.owner !== props.currentUser)
     ? ''
     : (props.carded)
     ? <div className='card card-item-task'>
@@ -75,14 +75,14 @@ export default function ItemTask(props) {
               className='tick-btn'
               onClick={
                 () => {
-                  if (taskData.owner == props.currentUser) {
+                  if (taskData.owner === props.currentUser) {
                     handleTickClick(props.taskID)
                   }
                 }
               }
             >
               {
-                (taskData.owner == props.currentUser) ?
+                (taskData.owner === props.currentUser) ?
                   ((doneState) ? <SVGTickMineDone /> : <SVGTickMineNotDone />) :
                   ((doneState) ? <SVGTickOthersDone /> : <SVGTickOthersNotDone/>)
               }
@@ -106,14 +106,14 @@ export default function ItemTask(props) {
             className='tick-btn'
             onClick={
               () => {
-                if (taskData.owner == props.currentUser) {
+                if (taskData.owner === props.currentUser) {
                   handleTickClick(props.taskID)
                 }
               }
             }
           >
             {
-              (taskData.owner == props.currentUser) ?
+              (taskData.owner === props.currentUser) ?
                 ((doneState) ? <SVGTickMineDone /> : <SVGTickMineNotDone />) :
                 ((doneState) ? <SVGTickOthersDone /> : <SVGTickOthersNotDone/>)
             }

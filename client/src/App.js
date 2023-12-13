@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from "react";
+// import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 
@@ -14,7 +15,8 @@ import ProjectNew from "./components/pages/page-project-new.component.js";
 import './App.scss';
 
 function App() {
-  const [currentUser, setCurrentUser] = useState('65773b179407d34564bd6ed9');
+  // const [currentUser, setCurrentUser] = useState('65773b179407d34564bd6ed9');
+  const [currentUser] = useState('65773b179407d34564bd6ed9');
 
   return (
     <Router>
