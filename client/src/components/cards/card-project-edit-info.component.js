@@ -18,15 +18,17 @@ export default function CardProjectEditInfo(props) {
   // console.log('MOUNT CardProjectVertical()');
   // const [doneStatus, setDoneStatus] = useState(props.projectData.done);
   const [projectPriorityClass, setProjectPriorityClass] = useState();
+  const [newPriority, setNewPriority] = useState();
+  const [newName, setNewName] = useState(props.oldProjectData.name);
+  const [newDescription, setNewDescription] = useState(props.oldProjectData.description);
+  const [newDue, setNewDue] = useState(props.oldProjectData.due);
   
-  
-  // function updateDoneStatus(passedDoneStatus) {
-  //   setDoneStatus(passedDoneStatus);
-  // };
-
   useEffect(
     () => {
       calculateProjectPriorityClass(props.oldProjectData.priority);
+      setNewName(props.oldProjectData.name);
+      setNewDescription(props.oldProjectData.description);
+      setNewDue(props.oldProjectData.due);
     },
     [props.oldProjectData]
   );
@@ -49,6 +51,7 @@ export default function CardProjectEditInfo(props) {
         break;
     }
     
+    setNewPriority(newPriority);
     setProjectPriorityClass(result);
   };
 
@@ -68,14 +71,25 @@ export default function CardProjectEditInfo(props) {
   };
 
   function updateField(event) {
+    console.log(event.target);
+
+    switch (event.target.name) {
+      case 'project_title':
+        setNewName(event.target.value);
+        break;
+      case 'project_description':
+        setNewDescription(event.target.value);
+        break;
+      default:
+        break;
+    }
+
     const sample = {
       name: '',
       description: '',
       priority: '',
       due: ''
-    }
-
-
+    };
   };
 
   // * Render
@@ -85,18 +99,18 @@ export default function CardProjectEditInfo(props) {
     >
       <div className="card-body">
         <div className="group-1">
-          <label for="project_title" class="form-label">Title</label>
-          <input type="text" class="form-control" id="project_title" name="project_title" aria-describedby="emailHelp" value={props.oldProjectData.name}/>
+          <label htmlFor="project_title" className="form-label">Title</label>
+          <input type="text" className="form-control" id="project_title" name="project_title" aria-describedby="emailHelp" value={newName || ''} onChange={updateField}/>
         </div>
         <div className="group-2">
-          <label for="project_description" class="form-label">Description</label>
-          <textarea class="form-control" id="project_description" name="project_description" rows="3" value={props.oldProjectData.description}></textarea>
+          <label htmlFor="project_description" className="form-label">Description</label>
+          <textarea className="form-control" id="project_description" name="project_description" rows="3" value={newDescription || ''} onChange={updateField}></textarea>
         </div>
         <div className="group-3">
-          <select class={projectPriorityClass} aria-label="Default select example" onChange={onPriorityInputChange}>
-            <option class='alert alert-danger' selected={(props.oldProjectData.priority === 'High')} value="High">High</option>
-            <option class='alert alert-warning' selected={(props.oldProjectData.priority === 'Medium')} value="Medium">Medium</option>
-            <option class='alert alert-success' selected={(props.oldProjectData.priority === 'Low')} value="Low">Low</option>
+          <select className={projectPriorityClass} aria-label="Default select example" onChange={onPriorityInputChange} value={props.oldProjectData.priority}>
+            <option className='alert alert-danger' value="High">High</option>
+            <option className='alert alert-warning' value="Medium">Medium</option>
+            <option className='alert alert-success' value="Low">Low</option>
           </select>
           {/* <div className="project-priority alert alert-danger">{props.oldProjectData.priority}</div> */}
           <div className="priority-due alert alert-secondary">
