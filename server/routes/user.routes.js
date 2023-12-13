@@ -104,12 +104,6 @@ router.route('/email/:email_encoded').get(
 // * Add one new User
 // ! Can't Test with Postman
 // POST http://localhost:5000/users/add
-// name_first
-// name_last
-// main_role
-// username
-// password
-// email
 router.route('/add').post(
   (req, res) => {
     console.log('POST /users/add'); 
@@ -164,13 +158,6 @@ router.route('/add').post(
 // * Update one User by ID
 // ! Can't Test with Postman
 // POST http://localhost:5000/users/update/:id
-// name_first
-// name_last
-// main_role
-// profile_picture
-// username
-// password
-// email
 router.route('/update/:id').post(
   (req, res) => {
     console.log('POST /users/update/' + req.params.id);
@@ -229,7 +216,6 @@ router.route('/update/:id').post(
 // * Update one User's Projects List by ID
 // ! Can't Test with Postman
 // POST http://localhost:5000/users/update/projects/:id
-// projects
 router.route('/update/projects/:id').post(
   (req, res) => {
     console.log('POST /users/update/projects/' + req.params.id);
@@ -246,7 +232,7 @@ router.route('/update/projects/:id').post(
     User.findById(req.params.id)
       .then(
         user => {
-          console.log(` - User ${req.body.name_first} ${req.body.name_last} Found! `);
+          console.log(` - User ${user.body.name.first} ${user.body.name.last} Found! `);
 
           user.projects = req.body.projects;
 
@@ -274,7 +260,6 @@ router.route('/update/projects/:id').post(
 // * Update one User's Friends List
 // ! Can't Test with Postman
 // POST http://localhost:5000/users/update/friends/:id
-// friends
 router.route('/update/friends/:id').post(
   (req, res) => {
     console.log('POST /users/update/friends/' + req.params.id);
@@ -291,7 +276,7 @@ router.route('/update/friends/:id').post(
     User.findById(req.params.id)
       .then(
         user => {
-          console.log(` - User ${req.body.name_first} ${req.body.name_last} Found! `);
+          console.log(` - User ${user.body.name.first} ${user.body.name.last} Found! `);
 
           user.friends = req.body.friends;
 

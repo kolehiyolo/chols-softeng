@@ -44,14 +44,6 @@ router.route('/:id').get(
 // * Add one new Project
 // ! Can't Test with Postman
 // POST http://localhost:5000/projects/add
-// name
-// description
-// priority
-// done
-// start
-// due
-// members
-// tasks
 router.route('/add').post(
   (req, res) => {
     console.log('POST /projects/add'); 
@@ -149,14 +141,6 @@ router.route('/:id').delete(
 // * Update one Project by ID
 // ! Can't Test with Postman
 // POST http://localhost:5000/projects/update/:id
-// name
-// description
-// priority
-// done
-// start
-// due
-// members
-// tasks
 router.route('/update/:id').post(
   (req, res) => {
     console.log('POST /project/update/' + req.params.id);
@@ -193,7 +177,7 @@ router.route('/update/:id').post(
     Project.findById(req.params.id)
       .then(
         project => {
-          console.log(` - Project "${req.body.name}" Found! `);
+          console.log(` - Project "${project.name}" Found! `);
 
           project.name = req.body.name;
           project.description = req.body.description;
