@@ -1,0 +1,43 @@
+// * Dependencies
+import React, {useState, useEffect} from "react";
+import axios from 'axios';
+
+// * Importing other Components
+// import CardProject from './card-project.component.js';
+// import CardTask from './card-task.component.js';
+
+// * Importing images/SVG
+// import { ReactComponent as SVGCheck } from '../svg/check-circle.svg';
+// import { ReactComponent as SVGCheck2 } from '../svg/check-circle-2.svg';
+
+// * Stylesheets
+import './item-avatar-circle.component.scss';
+
+export default function ItemAvatarCircle(props) {
+  console.log('MOUNT ItemAvatarCircle()');
+  console.log(props.userID);
+  const [avatarUrl, setAvatarUrl] = useState('');
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/users/' + props.userID)
+    .then(
+      res => {
+        const userData = res.data;
+        if (userData.profile_picture) {
+          setAvatarUrl(userData.profile_picture);
+        }
+      }
+    )
+  }, []); // Dependency array ensures the effect runs when userId changes
+
+  // * Render
+  return (
+    <div
+      className="item-avatar-circle"
+      key={props.userID}
+    >
+      <img src={avatarUrl} alt={'User ' + props.userID + ' Avatar'} />
+    </div>
+  );
+
+}

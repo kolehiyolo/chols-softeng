@@ -67,7 +67,7 @@ export default function CardProject(props) {
     props.changeTaskFilter(currentTaskFilter);
     let value = (currentTaskFilter == 'All Tasks') ? 'My Tasks' : 'All Tasks';
     setCurrentTaskFilter(value);
-  }
+  };
   
   function countDoneTasks(tasksArray) {
     let result = 0;

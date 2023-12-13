@@ -5,7 +5,7 @@ const Project = require('../models/project.model.js');
 // GET http://localhost:5000/projects/
 router.route('/').get(
   (req, res) => {
-    console.log('GET /users/');
+    console.log('GET /projects/');
 
     Project.find()
       .then(projects => {

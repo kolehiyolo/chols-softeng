@@ -1,0 +1,17 @@
+.page-projects {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  
+  .head {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: row;
+    gap: 50px;
+  }
+}
