@@ -4,8 +4,8 @@ import axios from 'axios';
 import {useParams} from "react-router-dom";
 
 // * Importing other Components
-import CardProjectInfo from '../cards/card-project-info.component.js';
-import CardProjectTasks from '../cards/card-project-tasks.component.js';
+import CardProjectEditInfo from '../cards/card-project-edit-info.component.js';
+import CardProjectEditTasks from '../cards/card-project-edit-tasks.component.js';
 // import CardTask from './card-task.component.js';
 
 // * Importing images/SVG
@@ -15,42 +15,88 @@ import CardProjectTasks from '../cards/card-project-tasks.component.js';
 // * Stylesheets
 import './page-project-edit.component.scss';
 
-export default function PageProject(props) {
-  // console.log('MOUNT PageProject()');
-  const [projectData, setProjectData] = useState([]);
+export default function PageProjectEdit(props) {
+  // console.log('MOUNT PageProjectEdit()');
+  const [oldProjectData, setOldProjectData] = useState([]);
+  const [newProjectData, setNewProjectData] = useState();
+  const [oldTasksData, setOldTasksData] = useState();
+  const [newTasksData, setNewTasksData] = useState();
+  const [oldMembersData, setOldMembersData] = useState();
+  const [newMembersData, setNewMembersData] = useState();
+  
   const { id: projectID } = useParams();
-  // const [filterMode, setFilterMode] = useState('All Projects');
 
   // * Fetch Projects from DB on mount
   useEffect(
     () =>{
-      fetchProjectData();
-    }
+      fetchAllOldData();
+    },
+    [projectID]
   );
 
-  // * This fetches all Projects from DB
-  function fetchProjectData() {
-    console.log(`RUN PageProject -> fetchProjectData()`); 
+  // * This fetches all Data related to the Project, including the tasks data and members data
+  function fetchAllOldData() {
+    console.log(`RUN PageProjectEdit -> fetchAllData()`); 
     axios.get('http://localhost:5000/projects/' + projectID)
       .then(
         res => {
           const project = res.data;
-          console.log(` - Success! Project "${project.length}" found`);
-          console.log(`\n`);
-          setProjectData(project);
+          setOldProjectData(project);
+          setNewProjectData(project);
+
+          const fetchedTasksData = [];
+          Promise.all(
+            project.tasks.map((taskID) =>
+              axios.get(`http://localhost:5000/tasks/${taskID}`)
+                .then(
+                  (res) => {
+                    const refinedTaskData = res.data;
+                    fetchedTasksData.push(refinedTaskData);
+                  }
+                )
+            )
+          )
+            .then(() => {
+              setOldTasksData(fetchedTasksData);
+              setNewTasksData(fetchedTasksData);
+            })
+
+          const fetchedMembersData = [];
+          Promise.all(
+            project.members.map((member) =>
+              axios.get(`http://localhost:5000/users/${member.id}`)
+                .then(
+                  (res) => {
+                    const fetchedMemberData= res.data;
+                    const refinedMemberData = {
+                      _id: member.id,
+                      name: fetchedMemberData.name,
+                      profile_picture: fetchedMemberData.profile_picture,
+                      project_role: member.role
+                    };
+                    fetchedMembersData.push(refinedMemberData);
+                  }
+                )
+            )
+          )
+            .then(() => {
+              setOldMembersData(fetchedMembersData);
+              setNewMembersData(fetchedMembersData);
+            })
         }
       )
   };
 
   function onBackClick() {
-    window.location.href='/projects/';
+    // TODO this should throw an "Are you sure" popup before allowing
+    window.location.href='/project/' + projectID;
   }
 
   // * Render
   return (
     <div 
       className='page-project'
-      id={'page-project-'+projectData._id}
+      id={'page-project-'+oldProjectData._id}
     >
       <div className='head'>
         <div className='buttons'>
@@ -65,20 +111,28 @@ export default function PageProject(props) {
             Back
           </button>
         </div>
-        <h3>{projectData.name}</h3>
+        <h3>Editing {oldProjectData.name}</h3>
       </div>
       <div className='body'>
-        <CardProjectInfo 
-          projectData={projectData}
+        <CardProjectEditInfo 
+          oldProjectData={oldProjectData}
+          oldTasksData={oldTasksData}
+          oldMembersData={oldMembersData}
+          newProjectData={newProjectData}
+          newTasksData={newTasksData}
+          newMembersData={newMembersData}
+          setNewProjectData={setNewProjectData}
+          setNewTasksData={setNewTasksData}
+          setNewMembersData={setNewMembersData}
         />
-        {
-          (projectData.length !== 0)
-          ? <CardProjectTasks 
-              projectData={projectData}
+        {/* {
+          (oldProjectData.length !== 0)
+          ? <CardProjectEditTasks 
+              projectData={oldProjectData}
               currentUser={props.currentUser}
             />
           : ''
-        }
+        } */}
       </div>
     </div>
 

@@ -27,6 +27,7 @@ export default function CardProjectInfo(props) {
   // * When "Edit" is clicked
   function onEditClick() {
     console.log(`RUN CardProjectInfo -> onEditClick()`); 
+    window.location.href='/project/edit/' + props.projectData._id;
   };
 
   // * When "Delete" is clicked

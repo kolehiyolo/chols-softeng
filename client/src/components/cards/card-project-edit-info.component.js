@@ -14,14 +14,48 @@ import ItemMember from '../items/item-member.component.js';
 // * Stylesheets
 import './card-project-info.component.scss';
 
-export default function CardProjectInfo(props) {
+export default function CardProjectEditInfo(props) {
   // console.log('MOUNT CardProjectVertical()');
   // const [doneStatus, setDoneStatus] = useState(props.projectData.done);
+  const [projectPriorityClass, setProjectPriorityClass] = useState();
   
   
   // function updateDoneStatus(passedDoneStatus) {
   //   setDoneStatus(passedDoneStatus);
   // };
+
+  useEffect(
+    () => {
+      calculateProjectPriorityClass(props.oldProjectData.priority);
+    },
+    [props.oldProjectData]
+  );
+
+  function calculateProjectPriorityClass(projectPriority) {
+    let result = "project-priority form-select alert alert-";
+
+    switch(projectPriority) {
+      case 'High':
+        result = result + 'danger';
+        break;
+      case 'Medium':
+        result = result + 'warning';
+        break;
+      case 'Low':
+        result = result + 'success';
+        break;
+      default:
+        result = 'project-priority form-select';
+        break;
+    }
+    
+    setProjectPriorityClass(result);
+  };
+
+  function onPriorityInputChange(event) {
+    console.log(`TRIGGER! ${event.target.value}`);
+    calculateProjectPriorityClass(event.target.value);
+  }
 
   // * When "Edit" is clicked
   function onEditClick() {
@@ -33,6 +67,17 @@ export default function CardProjectInfo(props) {
     console.log(`RUN CardProjectInfo -> onDeleteClick()`); 
   };
 
+  function updateField(event) {
+    const sample = {
+      name: '',
+      description: '',
+      priority: '',
+      due: ''
+    }
+
+
+  };
+
   // * Render
   return (
     <div 
@@ -40,25 +85,30 @@ export default function CardProjectInfo(props) {
     >
       <div className="card-body">
         <div className="group-1">
-          <div className="left">
-            <h5 className="card-title">{props.projectData.name}</h5>
-          </div>
-          <div className="right">
-            <div className="project-priority alert alert-danger">{props.projectData.priority}</div>
-            <div className="priority-due alert alert-secondary">
-              {new Date(props.projectData.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-            </div>
-          </div>
+          <label for="project_title" class="form-label">Title</label>
+          <input type="text" class="form-control" id="project_title" name="project_title" aria-describedby="emailHelp" value={props.oldProjectData.name}/>
         </div>
         <div className="group-2">
-          <p className="card-text">{props.projectData.description}</p>
+          <label for="project_description" class="form-label">Description</label>
+          <textarea class="form-control" id="project_description" name="project_description" rows="3" value={props.oldProjectData.description}></textarea>
+        </div>
+        <div className="group-3">
+          <select class={projectPriorityClass} aria-label="Default select example" onChange={onPriorityInputChange}>
+            <option class='alert alert-danger' selected={(props.oldProjectData.priority === 'High')} value="High">High</option>
+            <option class='alert alert-warning' selected={(props.oldProjectData.priority === 'Medium')} value="Medium">Medium</option>
+            <option class='alert alert-success' selected={(props.oldProjectData.priority === 'Low')} value="Low">Low</option>
+          </select>
+          {/* <div className="project-priority alert alert-danger">{props.oldProjectData.priority}</div> */}
+          <div className="priority-due alert alert-secondary">
+            {new Date(props.oldProjectData.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+          </div>
         </div>
         <div className="group-3">
           <div className="right">
             <div className="members">
               {             
-                (props.projectData.members)
-                  ? props.projectData.members.map(
+                (props.oldProjectData.members)
+                  ? props.oldProjectData.members.map(
                       (projectMember) => {
                         return (
                           <ItemMember
