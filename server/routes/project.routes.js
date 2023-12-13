@@ -4,6 +4,7 @@ const Project = require('../models/project.model.js');
 // * Get all Projects
 router.route('/').get(
   (req, res) => {
+    
     Project.find()
       .then(projects => res.json(projects))
       .catch(err => {

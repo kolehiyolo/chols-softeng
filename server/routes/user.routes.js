@@ -102,6 +102,7 @@ router.route('/email/:email_encoded').get(
 // );
 
 // * Add one new User
+// ! Can't Test with Postman
 // POST http://localhost:5000/users/add
 // name_first
 // name_last
@@ -109,7 +110,6 @@ router.route('/email/:email_encoded').get(
 // username
 // password
 // email
-// ! Can't Test with Postman
 router.route('/add').post(
   (req, res) => {
     console.log('POST /users/add'); 
@@ -153,6 +153,14 @@ router.route('/add').post(
 
 // * Update one User by ID
 // ! Can't Test with Postman
+// POST http://localhost:5000/users/update/:id
+// name_first
+// name_last
+// main_role
+// profile_picture
+// username
+// password
+// email
 router.route('/update/:id').post(
   (req, res) => {
     console.log('POST /users/update/' + req.params.id);
@@ -171,9 +179,7 @@ router.route('/update/:id').post(
           user.username = req.body.username;
           user.password = (req.body.password != null) ? req.body.password : user.password;
           user.email = req.body.email;      
-          user.projects = (req.body.projects != null) ? req.body.projects : user.projects;
-          user.tasks = (req.body.tasks != null) ? req.body.tasks : user.tasks;
-
+          
           console.log(` - updatedUser: `);
           console.log(user);
           console.log(`\n`);
@@ -201,6 +207,8 @@ router.route('/update/:id').post(
 
 // * Update one User's Projects List by ID
 // ! Can't Test with Postman
+// POST http://localhost:5000/users/update/projects/:id
+// projects
 router.route('/update/projects/:id').post(
   (req, res) => {
     console.log('POST /users/update/projects/' + req.params.id);
@@ -235,6 +243,8 @@ router.route('/update/projects/:id').post(
 
 // * Update one User's Friends List
 // ! Can't Test with Postman
+// POST http://localhost:5000/users/update/friends/:id
+// friends
 router.route('/update/friends/:id').post(
   (req, res) => {
     console.log('POST /users/update/friends/' + req.params.id);
