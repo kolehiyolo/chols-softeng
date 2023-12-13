@@ -2,6 +2,9 @@
 import React, {useState, useEffect} from "react";
 import axios from 'axios';
 
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
 // * Importing other Components
 // import CardProjectInfo from './section-project-info.component.js';
 import ItemMember from '../items/item-member.component.js';
@@ -51,8 +54,9 @@ export default function CardProjectEditInfo(props) {
         break;
     }
     
-    setNewPriority(newPriority);
+    setNewPriority(projectPriority);
     setProjectPriorityClass(result);
+    updateNewProjectData('priority', newPriority);
   };
 
   function onPriorityInputChange(event) {
@@ -71,25 +75,35 @@ export default function CardProjectEditInfo(props) {
   };
 
   function updateField(event) {
-    console.log(event.target);
-
     switch (event.target.name) {
       case 'project_title':
         setNewName(event.target.value);
+        updateNewProjectData('name', event.target.value);
         break;
-      case 'project_description':
-        setNewDescription(event.target.value);
+        case 'project_description':
+          setNewDescription(event.target.value);
+          updateNewProjectData('description', event.target.value);
         break;
       default:
         break;
     }
+  };
 
-    const sample = {
-      name: '',
-      description: '',
-      priority: '',
-      due: ''
-    };
+  function onDateChange(date) {
+    setNewDue(date);
+    updateNewProjectData('due', date);
+  };
+
+  function updateNewProjectData(property, value) {
+    props.setNewProjectData(
+      prevValue => {
+        let result = {...prevValue, [property]: value};
+
+        // console.log(result);
+
+        return result;
+      }
+    );
   };
 
   // * Render
@@ -107,15 +121,19 @@ export default function CardProjectEditInfo(props) {
           <textarea className="form-control" id="project_description" name="project_description" rows="3" value={newDescription || ''} onChange={updateField}></textarea>
         </div>
         <div className="group-3">
-          <select className={projectPriorityClass} aria-label="Default select example" onChange={onPriorityInputChange} value={props.oldProjectData.priority}>
+          <select className={projectPriorityClass} aria-label="Default select example" onChange={onPriorityInputChange} value={newPriority || 'Low'}>
             <option className='alert alert-danger' value="High">High</option>
             <option className='alert alert-warning' value="Medium">Medium</option>
             <option className='alert alert-success' value="Low">Low</option>
           </select>
           {/* <div className="project-priority alert alert-danger">{props.oldProjectData.priority}</div> */}
-          <div className="priority-due alert alert-secondary">
+          <DatePicker
+            selected={new Date((newDue != undefined) ? newDue : '01-01-2000')} 
+            onChange={onDateChange}
+          />
+          {/* <div className="priority-due alert alert-secondary">
             {new Date(props.oldProjectData.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-          </div>
+          </div> */}
         </div>
         <div className="group-3">
           <div className="right">
