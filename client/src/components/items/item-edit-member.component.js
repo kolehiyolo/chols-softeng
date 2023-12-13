@@ -87,7 +87,14 @@ export default function ItemEditMember(props) {
         </div>
         <div className='right'>
           <p>Member Name</p>
-          <input value={updatedMemberData.project_role || ''} onChange={onRoleChange}/>
+          <input
+            type="text"
+            className="form-control"
+            id="project_title" 
+            name="project_title" 
+            aria-describedby="emailHelp"
+            value={updatedMemberData.project_role || ''} onChange={onRoleChange}
+          />
         </div>
       </div>
       <div className='group-2'>

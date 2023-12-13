@@ -23,6 +23,7 @@ export default function PageProjectEdit(props) {
   const [newTasksData, setNewTasksData] = useState();
   const [oldMembersData, setOldMembersData] = useState();
   const [newMembersData, setNewMembersData] = useState();
+  const [currentUserFriendsData, setCurrentUserFriendsData] = useState();
   
   const { id: projectID } = useParams();
 
@@ -84,6 +85,42 @@ export default function PageProjectEdit(props) {
               setOldMembersData(fetchedMembersData);
               setNewMembersData(fetchedMembersData);
             })
+
+          const fetchedFriendsData = [];
+          let currentUserFriends = [];
+          Promise.all([
+            // Fetching currentUser Friends
+            axios.get(`http://localhost:5000/users/${props.currentUser}`)
+              .then((res) => res.data.friends)
+              .then((currentUserFriends) => {
+                console.log('currentUserFriends:');
+                console.log(currentUserFriends);
+          
+                // Fetching data for each Friend
+                const friendPromises = currentUserFriends.map((friendID) =>
+                  axios.get(`http://localhost:5000/users/${friendID}`)
+                    .then((res) => {
+                      const fetchedFriendData = res.data;
+                      const refinedFriendData = {
+                        _id: friendID,
+                        name: fetchedFriendData.name,
+                        profile_picture: fetchedFriendData.profile_picture,
+                        main_role: fetchedFriendData.main_role,
+                      };
+                      console.log('refinedFriendData:');
+                      console.log(refinedFriendData);
+                      return refinedFriendData;
+                    })
+                );
+          
+                return Promise.all(friendPromises);
+              })
+          ])
+            .then(([currentUserFriendsData]) => {
+              console.log('currentUserFriendsData:');
+              console.log(currentUserFriendsData);
+              setCurrentUserFriendsData(currentUserFriendsData);
+            })
         }
       )
   };
@@ -125,6 +162,8 @@ export default function PageProjectEdit(props) {
           setNewProjectData={setNewProjectData}
           setNewTasksData={setNewTasksData}
           setNewMembersData={setNewMembersData}
+          currentUserFriendsData={currentUserFriendsData}
+          setCurrentUserFriendsData={setCurrentUserFriendsData}
         />
         {/* {
           (oldProjectData.length !== 0)

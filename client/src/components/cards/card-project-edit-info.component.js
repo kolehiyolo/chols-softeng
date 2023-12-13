@@ -147,6 +147,8 @@ export default function CardProjectEditInfo(props) {
             setNewProjectData={props.setNewProjectData}
             setNewTasksData={props.setNewTasksData}
             setNewMembersData={props.setNewMembersData}
+            currentUserFriendsData={props.currentUserFriendsData}
+            setCurrentUserFriendsData={props.setCurrentUserFriendsData}
           />
         </div>
         <div className="group-4">

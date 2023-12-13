@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 
 // * Importing other Components
 import ItemEditMember from '../items/item-edit-member.component.js';
-import TestModal from '../popup/popup-v1.component.js';
+import PopupAddMember from '../popup/popup-add-member.component.js';
 // import ItemTask from '../items/item-task.component.js';
 // import CardTask from './card-task.component.js';
 
@@ -48,9 +48,13 @@ export default function SectionProjectEditMembers(props) {
         >
           Add Member
         </Button>
-        <TestModal
+        <PopupAddMember
           showModal={showModal}
           handleClose={handleClose}
+          currentUserFriendsData={props.currentUserFriendsData}
+          setCurrentUserFriendsData={props.setCurrentUserFriendsData}
+          newMembersData={props.newMembersData}
+          setNewMembersData={props.setNewMembersData}
         />
       </div>
       <div className='members'>
