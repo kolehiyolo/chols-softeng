@@ -41,6 +41,6 @@ app.use('/users', userRoutes);
 // * Start Server
 app.listen(PORT, () => {
   console.clear();
-  console.log(`SERVER IS RUNNING ON PORT ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
   console.log(`\n`);
 });

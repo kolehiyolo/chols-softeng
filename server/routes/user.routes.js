@@ -1,100 +1,269 @@
+// * Core Dependencies
 const router = require('express').Router();
 const User = require('../models/user.model.js');
 
+// * All possible routes complete
+// * Will add if needed
+
 // * Get all Users
+// GET http://localhost:5000/users/
 router.route('/').get(
   (req, res) => {
+    console.log('GET /users/');
+
     User.find()
-      .then(users => res.json(users))
-      .catch(err => res.status(400).json(`Error: ${err}`));
+      .then(users => {
+        console.log(` - Success! ${users.length} users found`);
+        console.log(`\n`);
+        res.json(users);
+      })
+      .catch(err => {
+        console.log(` - Failure! Didn't find all Users`);
+        console.log(`\n`);
+        res.status(400).json(`Error: ${err}`);
+      });
   }
 );
 
+// * Get one User by ID
+// GET http://localhost:5000/users/:id
+router.route('/:id').get(
+  (req,res) => {
+    console.log('GET /users/' + req.params.id);
+
+    User.findById(req.params.id)
+      .then(user => {
+        console.log(` - Success! ${user.name.first} ${user.name.last} (${user.username}) found`);
+        console.log(`\n`);
+        res.json(user);
+      })
+      .catch(err => {
+        console.log(` - Failure! Didn't find User by ID`);
+        console.log(`\n`);
+        res.status(400).json(`Error: ${err}`);
+      });
+  }
+);
+
+// * Get one User by Username
+// GET http://localhost:5000/users/username/:username
+router.route('/username/:username').get(
+  (req,res) => {
+    console.log('GET /users/username/' + req.params.username);
+
+    User.findOne({username: req.params.username})
+      .then(user => {
+        console.log(` - Success! ${user.name.first} ${user.name.last} (${user._id}) found`);
+        console.log(`\n`);
+        res.json(user);
+      })
+      .catch(err => {
+        console.log(` - Failure! Didn't find User by username`);
+        console.log(`\n`);
+        res.status(400).json(`Error: ${err}`);
+      });
+  }
+);
+
+// * Get one User by Email
+// GET http://localhost:5000/users/email/:email_encoded
+router.route('/email/:email_encoded').get(
+  (req,res) => {
+    console.log('GET /users/email/' + req.params.email_encoded);
+
+    // -* Unencode email_encoded
+    const email_decoded = decodeURIComponent(req.params.email_encoded.replace(/\+/g, ' '));
+
+    User.findOne({email: email_decoded})
+    .then(user => {
+      console.log(` - Success! ${user.name.first} ${user.name.last} (${user._id}) found`);
+      console.log(`\n`);
+      res.json(user);
+    })
+    .catch(err => {
+      console.log(` - Failure! Didn't find User by email`);
+      console.log(`\n`);
+      res.status(400).json(`Error: ${err}`);
+    });
+  }
+);
+
+// * Delete one User by ID
+// ! Not allowed to have API access
+// ! If deleting user, must be done via direct MongoDB access
+// router.route('/:id').delete(
+//   (req,res) => {
+//     console.log('DELETE /users/' + req.params.id);
+
+//     User.findByIdAndDelete(req.params.id)
+//       .then(() => res.json('User deleted.'))
+//       .catch(err => res.status(400).json(`Error: ${err}`));
+//   }
+// );
+
 // * Add one new User
+// POST http://localhost:5000/users/add
+// name_first
+// name_last
+// main_role
+// username
+// password
+// email
+// ! Can't Test with Postman
 router.route('/add').post(
   (req, res) => {
+    console.log('POST /users/add'); 
+
     const name = {
       first: req.body.name_first,
-      middle: req.body.name_middle,
       last: req.body.name_last
     };
     const main_role = req.body.main_role;
-    const profile_picture = req.body.profile_picture;
-    const user_name = req.body.user_name;
+    const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
-
-    // TODO
-    const projects = req.body.projects;
-    const tasks = req.body.tasks;
 
     const newUser = new User(
       {
         name,
         main_role,
-        projects,
-        tasks,
-        profile_picture,
-        user_name,
+        username,
         password,
         email
       }
     );
 
-    console.log(newUser)
+    console.log(` - newUser: `)
+    console.log(newUser);
+    console.log(`\n`);
 
     newUser.save()
-      .then(() => res.json('User added!'))
-      .catch(err => res.status(400).json(`Error: ${err}`));
-  }
-);
-
-// * Get one User by ID
-router.route('/:id').get(
-  (req,res) => {
-    console.log('GET /users/'+req.params.id);
-    User.findById(req.params.id)
-      .then(user => res.json(user))
-      .catch(err => res.status(400).json(`Error: ${err}`));
-  }
-);
-
-// * Delete one User by ID
-router.route('/:id').delete(
-  (req,res) => {
-    User.findByIdAndDelete(req.params.id)
-      .then(() => res.json('User deleted.'))
-      .catch(err => res.status(400).json(`Error: ${err}`));
+      .then(() => {
+        console.log(` - Success! User added`);
+        console.log(`\n`);
+        res.json(`Success! User added`);
+      })
+      .catch(err => {
+        console.log(` - Failure! Didn't add user`);
+        console.log(`\n`);
+        res.status(400).json(`Error: ${err}`);
+      });
   }
 );
 
 // * Update one User by ID
+// ! Can't Test with Postman
 router.route('/update/:id').post(
   (req, res) => {
+    console.log('POST /users/update/' + req.params.id);
+
     User.findById(req.params.id)
       .then(
         user => {
+          console.log(` - User ${req.body.name_first} ${req.body.name_last} Found! `);
+
           user.name = {
             first: req.body.name_first,
-            middle: req.body.name_middle,
             last: req.body.name_last
           };
           user.main_role = req.body.main_role;
           user.profile_picture = req.body.profile_picture;
-          user.user_name = req.body.user_name;
-          user.password = req.body.password;
-          user.email = req.body.email;
-      
-          // TODO
-          user.projects = req.body.projects;
-          user.tasks = req.body.tasks;
+          user.username = req.body.username;
+          user.password = (req.body.password != null) ? req.body.password : user.password;
+          user.email = req.body.email;      
+          user.projects = (req.body.projects != null) ? req.body.projects : user.projects;
+          user.tasks = (req.body.tasks != null) ? req.body.tasks : user.tasks;
 
+          console.log(` - updatedUser: `);
+          console.log(user);
+          console.log(`\n`);
+          
           user.save()
-            .then(() => res.json('User updated!'))
-            .catch(err => res.status(400).json(`Error: ${err}`));
+            .then(() => {
+              console.log(` - Success! User updated`);
+              console.log(`\n`);
+              res.json(`Success! User updated`);
+            })
+            .catch(err => {
+              console.log(` - Failure! Didn't update User`);
+              console.log(`\n`);
+              res.status(400).json(`Error: ${err}`);
+            });
         }
       )
-      .catch(err => res.status(400).json(`Error: ${err}`));
+      .catch(err => {
+        console.log(` - Failure! Didn't update User since can't find User by ID`);
+        console.log(`\n`);
+        res.status(400).json(`Error: ${err}`);
+      });
+  }
+);
+
+// * Update one User's Projects List by ID
+// ! Can't Test with Postman
+router.route('/update/projects/:id').post(
+  (req, res) => {
+    console.log('POST /users/update/projects/' + req.params.id);
+
+    User.findById(req.params.id)
+      .then(
+        user => {
+          console.log(` - User ${req.body.name_first} ${req.body.name_last} Found! `);
+
+          user.projects = req.body.projects;
+
+          user.save()
+          .then(() => {
+            console.log(` - Success! User's projects updated`);
+            console.log(`\n`);
+            res.json(`Success! User's projects updated`);
+          })
+          .catch(err => {
+            console.log(` - Failure! Didn't update User's projects`);
+            console.log(`\n`);
+            res.status(400).json(`Error: ${err}`);
+          });
+        }
+      )
+      .catch(err => {
+        console.log(` - Failure! Didn't update User's projects since can't find User by ID`);
+        console.log(`\n`);
+        res.status(400).json(`Error: ${err}`);
+      });
+  }
+);
+
+// * Update one User's Friends List
+// ! Can't Test with Postman
+router.route('/update/friends/:id').post(
+  (req, res) => {
+    console.log('POST /users/update/friends/' + req.params.id);
+
+    User.findById(req.params.id)
+      .then(
+        user => {
+          console.log(` - User ${req.body.name_first} ${req.body.name_last} Found! `);
+
+          user.friends = req.body.friends;
+
+          user.save()
+          .then(() => {
+            console.log(` - Success! User's friends updated`);
+            console.log(`\n`);
+            res.json(`Success! User's friends updated`);
+          })
+          .catch(err => {
+            console.log(` - Failure! Didn't update User's friends`);
+            console.log(`\n`);
+            res.status(400).json(`Error: ${err}`);
+          });
+        }
+      )
+      .catch(err => {
+        console.log(` - Failure! Didn't update User's friends since can't find User by ID`);
+        console.log(`\n`);
+        res.status(400).json(`Error: ${err}`);
+      });
   }
 );
 

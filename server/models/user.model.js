@@ -8,10 +8,6 @@ const userSchema = new Schema({
       required: true,
       trim: true,
     },
-    middle: {
-      type: String,
-      trim: true,
-    },
     last: {
       type: String,
       required: true,
@@ -27,15 +23,11 @@ const userSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Project', // Assuming a reference to the Project model
   }],
-  tasks: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Task', // Assuming a reference to the Task model
-  }],
   profile_picture: {
     type: String,
     trim: true,
   },
-  user_name: {
+  username: {
     type: String,
     required: true,
     unique: true,
@@ -54,6 +46,10 @@ const userSchema = new Schema({
     trim: true,
     // You may want to add additional email constraints here
   },
+  friends: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Assuming a reference to the Task model
+  }]
 });
 
 const User = mongoose.model('User', userSchema);
