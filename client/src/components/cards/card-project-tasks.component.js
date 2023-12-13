@@ -14,7 +14,7 @@ import ItemTask from '../items/item-task.component.js';
 // * Stylesheets
 import './card-project-tasks.component.scss';
 
-export default function CardProjecTasks(props) {
+export default function CardProjectTasks(props) {
   const [filterMode, setFilterMode] = useState('All Tasks');
   const [tasks, setTasks] = useState([]);
   const [myTasks, setMyTasks] = useState([]);

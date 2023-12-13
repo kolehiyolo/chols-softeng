@@ -72,7 +72,8 @@ export default function PageProjectEdit(props) {
                       _id: member.id,
                       name: fetchedMemberData.name,
                       profile_picture: fetchedMemberData.profile_picture,
-                      project_role: member.role
+                      project_role: member.role,
+                      main_role: fetchedMemberData.main_role,
                     };
                     fetchedMembersData.push(refinedMemberData);
                   }

@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 // * Importing other Components
 // import CardProjectInfo from './section-project-info.component.js';
 import ItemMember from '../items/item-member.component.js';
+import SectionProjectEditMembers from '../sections/section-project-edit-members.component.js';
 // import CardTask from './card-task.component.js';
 
 // * Importing images/SVG
@@ -136,24 +137,17 @@ export default function CardProjectEditInfo(props) {
           </div> */}
         </div>
         <div className="group-3">
-          <div className="right">
-            <div className="members">
-              {             
-                (props.oldProjectData.members)
-                  ? props.oldProjectData.members.map(
-                      (projectMember) => {
-                        return (
-                          <ItemMember
-                            projectMember={projectMember}
-                            key={projectMember.id}
-                          />
-                        )
-                      }
-                    )
-                  : ''
-              }
-            </div>
-          </div>
+          <SectionProjectEditMembers
+            oldProjectData={props.oldProjectData}
+            oldTasksData={props.oldTasksData}
+            oldMembersData={props.oldMembersData}
+            newProjectData={props.newProjectData}
+            newTasksData={props.newTasksData}
+            newMembersData={props.newMembersData}
+            setNewProjectData={props.setNewProjectData}
+            setNewTasksData={props.setNewTasksData}
+            setNewMembersData={props.setNewMembersData}
+          />
         </div>
         <div className="group-4">
           <div className="buttons">

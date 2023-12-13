@@ -1,22 +1,6 @@
-Users
-  CREATE
-    Create new user using sign up
-  READ
-    Read projects/tasks info for "Projects" and "My Tasks"
-    Read projects/tasks info for "Calendar"
-  EDIT
-    Edit existing user info (besides projects/tasks) using user profile page
-  DELETE
-    Delete user profile in user profile page
-
-Projects
-  CREATE
-    Create new project in "Projects" page
-  READ
-    Read projects data and project to "Projects" page
-    Read projects data and present in "My Tasks"
-  EDIT
-  DELETE
-  Edit 
-  Add/remove/edit members
-  
+I need a function that does the ff:
+1. It accepts memberID, which is another label for userID data
+2. It also accepts tasksData, which is an array of tasks objects, each of which has "owner" properties
+3. Those "owner" property is another label for userID data
+4. The function must find all items in the tasksData array that have their "owner" property equal to the "memberID
+5. Then, update those "owner" property to have the value "Unassigned"
