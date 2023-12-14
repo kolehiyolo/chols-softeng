@@ -50,9 +50,10 @@ export default function SectionProjectEditMembers(props) {
         </Button>
         <PopupAddMember
           showModal={showModal}
+          setShowModal={setShowModal}
           handleClose={handleClose}
-          currentUserFriendsData={props.currentUserFriendsData}
           setCurrentUserFriendsData={props.setCurrentUserFriendsData}
+          currentUserFriendsData={props.currentUserFriendsData}
           newMembersData={props.newMembersData}
           setNewMembersData={props.setNewMembersData}
         />

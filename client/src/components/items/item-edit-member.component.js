@@ -46,7 +46,7 @@ export default function ItemEditMember(props) {
     );
   };
 
-  function onDeleteClick() {
+  function onDeleteClick() { 
     console.log('DELETE MEMBER');
 
     props.setNewMembersData(

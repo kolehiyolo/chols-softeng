@@ -23,6 +23,7 @@ export default function PageProjectEdit(props) {
   const [newTasksData, setNewTasksData] = useState();
   const [oldMembersData, setOldMembersData] = useState();
   const [newMembersData, setNewMembersData] = useState();
+  const [oldCurrentUserFriendsData, setOldCurrentUserFriendsData] = useState();
   const [currentUserFriendsData, setCurrentUserFriendsData] = useState();
   
   const { id: projectID } = useParams();
@@ -34,6 +35,34 @@ export default function PageProjectEdit(props) {
     },
     [projectID]
   );
+  
+  // * Fetch Projects from DB on mount
+  useEffect(
+    () =>{
+      setCurrentUserFriendsData(removeFriendsWhoAreMembers(newMembersData, oldCurrentUserFriendsData));
+    },
+    [newMembersData]
+  );
+
+  function removeFriendsWhoAreMembers(fetchedMembersData, fetchedCurrentUserFriendsData) {
+    console.log('removeFriendsWhoAreMembers()');
+    console.log('newMembersData');
+    console.log(fetchedMembersData);
+    console.log('oldCurrentUserFriendsData');
+    console.log(fetchedCurrentUserFriendsData);
+
+    if (fetchedMembersData !== undefined && fetchedCurrentUserFriendsData !== undefined) {
+      // Extract _id values from newMembersData array
+      const newMembersIds = fetchedMembersData.map(user => user._id);
+      
+      // Filter currentUserFriendsData to include only users whose _id is not in newMembersIds
+      const updatedFriendsData = fetchedCurrentUserFriendsData.filter(
+        user => !newMembersIds.includes(user._id)
+        );
+      
+      return updatedFriendsData;
+    }
+  };
 
   // * This fetches all Data related to the Project, including the tasks data and members data
   function fetchAllOldData() {
@@ -62,67 +91,141 @@ export default function PageProjectEdit(props) {
               setNewTasksData(fetchedTasksData);
             })
 
+          // const fetchedMembersData = [];
+          // Promise.all(
+          //   project.members.map((member) =>
+          //     axios.get(`http://localhost:5000/users/${member.id}`)
+          //       .then(
+          //         (res) => {
+          //           const fetchedMemberData= res.data;
+          //           const refinedMemberData = {
+          //             _id: member.id,
+          //             name: fetchedMemberData.name,
+          //             profile_picture: fetchedMemberData.profile_picture,
+          //             project_role: member.role,
+          //             main_role: fetchedMemberData.main_role,
+          //           };
+          //           fetchedMembersData.push(refinedMemberData);
+          //         }
+          //       )
+          //   )
+          // )
+          //   .then(() => {
+          //     setOldMembersData(fetchedMembersData);
+          //     setNewMembersData(fetchedMembersData);
+          //   })
+
+          // const fetchedFriendsData = [];
+          // let currentUserFriends = [];
+          // Promise.all([
+          //   // Fetching currentUser Friends
+          //   axios.get(`http://localhost:5000/users/${props.currentUser}`)
+          //     .then((res) => res.data.friends)
+          //     .then((currentUserFriends) => {
+          //       console.log('currentUserFriends:');
+          //       console.log(currentUserFriends);
+          
+          //       // Fetching data for each Friend
+          //       const friendPromises = currentUserFriends.map((friendID) =>
+          //         axios.get(`http://localhost:5000/users/${friendID}`)
+          //           .then((res) => {
+          //             const fetchedFriendData = res.data;
+          //             const refinedFriendData = {
+          //               _id: friendID,
+          //               name: fetchedFriendData.name,
+          //               profile_picture: fetchedFriendData.profile_picture,
+          //               main_role: fetchedFriendData.main_role,
+          //             };
+          //             // console.log('refinedFriendData:');
+          //             // console.log(refinedFriendData);
+
+          //             return refinedFriendData;
+          //           })
+          //       );
+          
+          //       return Promise.all(friendPromises);
+          //     })
+          // ])
+          //   .then(([currentUserFriendsData]) => {
+          //     console.log('currentUserFriendsData:');
+          //     console.log(currentUserFriendsData);
+          //     // currentUserFriendsData = removeFriendsWhoAreMembers(currentUserFriendsData);
+          //     setCurrentUserFriendsData(currentUserFriendsData);
+          //   })
           const fetchedMembersData = [];
-          Promise.all(
+          const fetchedFriendsData = [];
+
+          // Fetching new members data
+          // const newMembersPromise = Promise.all(
+          //   project.members.map((member) =>
+          //     axios.get(`http://localhost:5000/users/${member.id}`)
+          //       .then((res) => {
+          //         const fetchedMemberData = res.data;
+          //         const refinedMemberData = {
+          //           _id: member.id,
+          //           name: fetchedMemberData.name,
+          //           profile_picture: fetchedMemberData.profile_picture,
+          //           project_role: member.role,
+          //           main_role: fetchedMemberData.main_role,
+          //         };
+          //         fetchedMembersData.push(refinedMemberData);
+          //       })
+          //   )
+          // ).then(() => setNewMembersData(fetchedMembersData));
+
+          // Fetching currentUser Friends
+          const currentUserFriendsPromise = Promise.all(
             project.members.map((member) =>
               axios.get(`http://localhost:5000/users/${member.id}`)
-                .then(
-                  (res) => {
-                    const fetchedMemberData= res.data;
-                    const refinedMemberData = {
-                      _id: member.id,
-                      name: fetchedMemberData.name,
-                      profile_picture: fetchedMemberData.profile_picture,
-                      project_role: member.role,
-                      main_role: fetchedMemberData.main_role,
-                    };
-                    fetchedMembersData.push(refinedMemberData);
-                  }
-                )
+                .then((res) => {
+                  const fetchedMemberData = res.data;
+                  const refinedMemberData = {
+                    _id: member.id,
+                    name: fetchedMemberData.name,
+                    profile_picture: fetchedMemberData.profile_picture,
+                    project_role: member.role,
+                    main_role: fetchedMemberData.main_role,
+                  };
+                  fetchedMembersData.push(refinedMemberData);
+                })
             )
-          )
-            .then(() => {
-              setOldMembersData(fetchedMembersData);
-              setNewMembersData(fetchedMembersData);
+          ).then(() => setNewMembersData(fetchedMembersData))
+            .then(() => axios.get(`http://localhost:5000/users/${props.currentUser}`))
+            .then((res) => {
+              let result = res.data.friends;
+              result.unshift(props.currentUser);
+              return result;
             })
+            .then((currentUserFriends) => {
+              console.log('currentUserFriends:');
+              console.log(currentUserFriends);
 
-          const fetchedFriendsData = [];
-          let currentUserFriends = [];
-          Promise.all([
-            // Fetching currentUser Friends
-            axios.get(`http://localhost:5000/users/${props.currentUser}`)
-              .then((res) => res.data.friends)
-              .then((currentUserFriends) => {
-                console.log('currentUserFriends:');
-                console.log(currentUserFriends);
-          
-                // Fetching data for each Friend
-                const friendPromises = currentUserFriends.map((friendID) =>
-                  axios.get(`http://localhost:5000/users/${friendID}`)
-                    .then((res) => {
-                      const fetchedFriendData = res.data;
-                      const refinedFriendData = {
-                        _id: friendID,
-                        name: fetchedFriendData.name,
-                        profile_picture: fetchedFriendData.profile_picture,
-                        main_role: fetchedFriendData.main_role,
-                      };
-                      console.log('refinedFriendData:');
-                      console.log(refinedFriendData);
-                      return refinedFriendData;
-                    })
-                );
-          
-                return Promise.all(friendPromises);
-              })
-          ])
-            .then(([currentUserFriendsData]) => {
-              console.log('currentUserFriendsData:');
-              console.log(currentUserFriendsData);
-              setCurrentUserFriendsData(currentUserFriendsData);
+              // Fetching data for each Friend
+              const friendPromises = currentUserFriends.map((friendID) =>
+                axios.get(`http://localhost:5000/users/${friendID}`)
+                  .then((res) => {
+                    const fetchedFriendData = res.data;
+                    const refinedFriendData = {
+                      _id: friendID,
+                      name: fetchedFriendData.name,
+                      profile_picture: fetchedFriendData.profile_picture,
+                      main_role: fetchedFriendData.main_role,
+                    };
+                    return refinedFriendData;
+                  })
+              );
+
+              return Promise.all(friendPromises);
             })
-        }
-      )
+            .then((fetchedCurrentUserFriendsData) => {
+              console.log('fetchedCurrentUserFriendsData:');
+              console.log(fetchedCurrentUserFriendsData);
+
+              setOldCurrentUserFriendsData(fetchedCurrentUserFriendsData);
+              setCurrentUserFriendsData(removeFriendsWhoAreMembers(fetchedMembersData, fetchedCurrentUserFriendsData));
+            });
+            }
+          )
   };
 
   function onBackClick() {
