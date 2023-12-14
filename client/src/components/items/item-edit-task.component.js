@@ -1,9 +1,11 @@
 // * Dependencies
 import React, {useState, useEffect} from "react";
 import axios from 'axios';
+import { Button } from 'react-bootstrap';
 
 // * Importing other Components
 import ItemAvatarCircle from './item-avatar-circle.component.js';
+import PopupEditTask from '../popup/popup-edit-task.component.js';
 
 // * Importing images/SVG
 import { ReactComponent as SVGPencil } from '../../svg/pencil.svg';
@@ -20,6 +22,8 @@ export default function ItemEditTask(props) {
   //   due: '',
   // });
   // const [doneState, setDoneState] = useState(false);
+  const [updatedTaskData, setUpdatedTaskData] = useState();
+  const [showEditModal, setShowEditModal] = useState(false);
 
   // * Fetch Task Data from DB on mount
   // useEffect(
@@ -29,34 +33,30 @@ export default function ItemEditTask(props) {
   //   [props.taskID]
   // );
 
-  // function fetchTaskData(taskID) {
-  //   console.log(`RUN ItemTask -> fetchTaskData()`); 
-  //   axios.get('http://localhost:5000/tasks/' + taskID)
-  //     .then(
-  //       res => {
-  //         const fetchedTaskData = res.data;
-  //         const refinedTaskData = {
-  //           name: fetchedTaskData.name,
-  //           owner: fetchedTaskData.owner,
-  //           due: fetchedTaskData.due,
-  //         }
-  //         setTaskData(refinedTaskData);
-  //         setDoneState(fetchedTaskData.done);
-  //       }
-  //     )
-  // };
+  function handleEditShow() {
+    console.log('handleEditShow()');
+    setShowEditModal(true);
+  };
 
-  // function handleTickClick(taskID) {
-  //   props.tickTask(taskID);
-  //   setDoneState(!doneState);
-  // }
+  function handleEditClose() {
+    setShowEditModal(false);
+  };
+
+
+  function onEditClick() {
+    console.log('onEditClick()');
+    handleEditShow();
+  };
+
+  function onDeleteClick() {
+    console.log('onDeleteClick()');
+  };
 
   // * Render
   return (
     (props.filterMode === 'My Tasks' && props.taskData.owner !== props.currentUser)
     ? ''
-    : (props.carded)
-    ? <div className='card card-item-task'>
+    : <div className='card card-item-task'>
         <div className='item-task'>
           <div className='group-1'>
             <ItemAvatarCircle
@@ -70,52 +70,41 @@ export default function ItemEditTask(props) {
               {new Date(props.taskData.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             </span>
             {/* <button
-              className='tick-btn'
+              className='edit-btn'
               onClick={
                 () => {
-                  if (props.taskData.owner === props.currentUser) {
-                    handleTickClick(props.taskID)
-                  }
+                  onEditClick();
                 }
               }
             >
-              {
-                (taskData.owner === props.currentUser) ?
-                  ((doneState) ? <SVGTickMineDone /> : <SVGTickMineNotDone />) :
-                  ((doneState) ? <SVGTickOthersDone /> : <SVGTickOthersNotDone/>)
-              }
-            </button> */}
-          </div>
-        </div>
-      </div>
-    : <div className='item-task'>
-        <div className='group-1'>
-          <ItemAvatarCircle
-              userID={props.taskData.owner}
-              key={props.taskData.owner}
-            />
-          <p>{props.taskData.name}</p>      
-        </div>
-        <div className='group-2'>
-          <span className="priority-due badge text-bg-secondary">
-            {new Date(props.taskData.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-          </span>
-          {/* <button
-            className='tick-btn'
-            onClick={
-              () => {
-                if (taskData.owner === props.currentUser) {
-                  handleTickClick(props.taskID)
+              <SVGPencil />
+            </button>
+            <button
+              className='trash-btn'
+              onClick={
+                () => {
+                  onDeleteClick();
                 }
               }
-            }
-          >
-            {
-              (taskData.owner === props.currentUser) ?
-                ((doneState) ? <SVGTickMineDone /> : <SVGTickMineNotDone />) :
-                ((doneState) ? <SVGTickOthersDone /> : <SVGTickOthersNotDone/>)
-            }
-          </button> */}
+            >
+            </button> */}
+            <Button
+              variant="primary"
+              onClick={onEditClick}
+            >
+              <SVGPencil />
+            </Button>
+            <PopupEditTask
+              taskData={props.taskData}
+              showEditModal={showEditModal}
+              setShowEditModal={setShowEditModal}
+              handleEditClose={handleEditClose}
+              newMembersData={props.newMembersData}
+              setNewMembersData={props.setNewMembersData}
+              newTasksData={props.newTasksData}
+              setNewTasksData={props.setNewTasksData}
+            />
+          </div>
         </div>
       </div>
   );

@@ -1,11 +1,13 @@
 // * Dependencies
 import React, {useState, useEffect} from "react";
 import axios from 'axios';
+import { Button } from 'react-bootstrap';
 
 // * Importing other Components
 // import CardProjectInfo from './section-project-info.component.js';
 import ItemEditTask from '../items/item-edit-task.component.js';
 // import CardTask from './card-task.component.js';
+import PopupAddTask from '../popup/popup-add-task.component.js';
 
 // * Importing images/SVG
 // import { ReactComponent as SVGCheck } from '../svg/check-circle.svg';
@@ -20,8 +22,7 @@ export default function CardProjectEditTasks(props) {
   const [myTasks, setMyTasks] = useState([]);
   const [allDoneTasks, setAllDoneTasks] = useState(0);
   const [myDoneTasks, setMyDoneTasks] = useState(0);
-
-  console.log('MOUNT');
+  const [showAddTaskModal, setShowAddTaskModal] = useState(false);
 
   function handleToggleChange(event) {
     setFilterMode(event.target.value);
@@ -53,8 +54,6 @@ export default function CardProjectEditTasks(props) {
   );
 
   function calculateDoneTasks(tasks) {
-    console.log(`RUN SectionProjectTasks -> calculateDoneTasks()`); 
-
     let resultsAll = 0;
     let resultsMy = 0;
       
@@ -75,7 +74,6 @@ export default function CardProjectEditTasks(props) {
     setAllDoneTasks(resultsAll);
 
     const projectIsDone = (resultsAll == tasks.length) ? true : false;
-    // props.updateDoneStatus(projectIsDone);
 
     axios.post(
       'http://localhost:5000/projects/done/' + props.projectData._id,
@@ -90,38 +88,18 @@ export default function CardProjectEditTasks(props) {
       );
   };
 
-  // function fetchTasksData(taskIDArray) {
-  //   console.log(`RUN SectionProjectTasks -> fetchTasksData()`); 
+  function handleAddTaskShow() {
+    setShowAddTaskModal(true);
+  };
 
-  //   const updatedTasks = [];
+  function handleAddTaskClose() {
+    setShowAddTaskModal(false);
+  };
 
-  //   Promise.all(
-  //     taskIDArray.map((taskID) =>
-  //       axios.get(`http://localhost:5000/tasks/${taskID}`)
-  //         .then(
-  //           (res) => {
-  //             const fetchedTaskData = res.data;
-  //             const refinedTaskData = {
-  //               id: taskID,
-  //               done: fetchedTaskData.done,
-  //               owner: fetchedTaskData.owner
-  //             };
-  //             updatedTasks.push(refinedTaskData);
-  //           }
-  //         )
-  //     )
-  //   )
-  //     .then(() => {
-  //       // After all requests are complete, update the state with the array of refinedTaskData
-  //       setTasks(updatedTasks);
-
-  //       const myUpdatedTasks = updatedTasks.filter((task) =>
-  //         task.owner == props.currentUser
-  //       );
-
-  //       setMyTasks(myUpdatedTasks);
-  //     })
-  // };
+  function onAddMemberClick() {
+    console.log('onAddMemberClick');
+    handleAddTaskShow();
+  };
 
   // * Render
   return (
@@ -195,6 +173,24 @@ export default function CardProjectEditTasks(props) {
               </div>
             </div>
           </div>
+          <div>
+            <Button
+              variant="primary"
+              onClick={onAddMemberClick}
+            >
+              Add Task
+            </Button>
+            <PopupAddTask
+              // taskData={props.taskData}
+              showAddTaskModal={showAddTaskModal}
+              setShowAddTaskModal={setShowAddTaskModal}
+              handleAddTaskClose={handleAddTaskClose}
+              newMembersData={props.newMembersData}
+              setNewMembersData={props.setNewMembersData}
+              newTasksData={props.newTasksData}
+              setNewTasksData={props.setNewTasksData}
+            />
+          </div>
         </div>
         <div className="body">
           {
@@ -204,6 +200,12 @@ export default function CardProjectEditTasks(props) {
                   return (
                     <ItemEditTask 
                       taskData={taskData}
+                      setCurrentUserFriendsData={props.setCurrentUserFriendsData}
+                      currentUserFriendsData={props.currentUserFriendsData}
+                      newMembersData={props.newMembersData}
+                      setNewMembersData={props.setNewMembersData}
+                      newTasksData={props.newTasksData}
+                      setNewTasksData={props.setNewTasksData}
                       // taskID={taskID}
                       key={taskData._id}
                       currentUser={props.currentUser}

@@ -6,8 +6,8 @@ import Select from 'react-select';
 // * Importing other Components
 import ItemFriend from '../items/item-friend.component.js';
 
-// export default function TestModal({ props.showModal, props.handleClose }) {
-const TestModal = (props) => {
+export default function PopupAddMember(props) {
+// const TestModal = (props) => {
   const [newMemberData, setNewMemberData] = useState(
     {
       _id: '',
@@ -18,13 +18,8 @@ const TestModal = (props) => {
     }
   );
 
-  // if (newMembersData.some(item => item._id === friendID))
-
   function onSelectFriendChange(selectedOption) {
     console.log(selectedOption);
-    // Find which friend is selected
-    // Go through array of currentUserFriendsData to find their data
-    // Update newMemberData _id, name, profile_picture, main_role
 
     setNewMemberData(
       prevData => {
@@ -161,5 +156,3 @@ const TestModal = (props) => {
     : ''
   );
 };
-
-export default TestModal;

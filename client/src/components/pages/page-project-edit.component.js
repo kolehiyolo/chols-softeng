@@ -85,89 +85,9 @@ export default function PageProjectEdit(props) {
               setNewTasksData(fetchedTasksData);
             })
 
-          // const fetchedMembersData = [];
-          // Promise.all(
-          //   project.members.map((member) =>
-          //     axios.get(`http://localhost:5000/users/${member.id}`)
-          //       .then(
-          //         (res) => {
-          //           const fetchedMemberData= res.data;
-          //           const refinedMemberData = {
-          //             _id: member.id,
-          //             name: fetchedMemberData.name,
-          //             profile_picture: fetchedMemberData.profile_picture,
-          //             project_role: member.role,
-          //             main_role: fetchedMemberData.main_role,
-          //           };
-          //           fetchedMembersData.push(refinedMemberData);
-          //         }
-          //       )
-          //   )
-          // )
-          //   .then(() => {
-          //     setOldMembersData(fetchedMembersData);
-          //     setNewMembersData(fetchedMembersData);
-          //   })
-
-          // const fetchedFriendsData = [];
-          // let currentUserFriends = [];
-          // Promise.all([
-          //   // Fetching currentUser Friends
-          //   axios.get(`http://localhost:5000/users/${props.currentUser}`)
-          //     .then((res) => res.data.friends)
-          //     .then((currentUserFriends) => {
-          //       console.log('currentUserFriends:');
-          //       console.log(currentUserFriends);
-          
-          //       // Fetching data for each Friend
-          //       const friendPromises = currentUserFriends.map((friendID) =>
-          //         axios.get(`http://localhost:5000/users/${friendID}`)
-          //           .then((res) => {
-          //             const fetchedFriendData = res.data;
-          //             const refinedFriendData = {
-          //               _id: friendID,
-          //               name: fetchedFriendData.name,
-          //               profile_picture: fetchedFriendData.profile_picture,
-          //               main_role: fetchedFriendData.main_role,
-          //             };
-          //             // console.log('refinedFriendData:');
-          //             // console.log(refinedFriendData);
-
-          //             return refinedFriendData;
-          //           })
-          //       );
-          
-          //       return Promise.all(friendPromises);
-          //     })
-          // ])
-          //   .then(([currentUserFriendsData]) => {
-          //     console.log('currentUserFriendsData:');
-          //     console.log(currentUserFriendsData);
-          //     // currentUserFriendsData = removeFriendsWhoAreMembers(currentUserFriendsData);
-          //     setCurrentUserFriendsData(currentUserFriendsData);
-          //   })
           const fetchedMembersData = [];
           const fetchedFriendsData = [];
 
-          // Fetching new members data
-          // const newMembersPromise = Promise.all(
-          //   project.members.map((member) =>
-          //     axios.get(`http://localhost:5000/users/${member.id}`)
-          //       .then((res) => {
-          //         const fetchedMemberData = res.data;
-          //         const refinedMemberData = {
-          //           _id: member.id,
-          //           name: fetchedMemberData.name,
-          //           profile_picture: fetchedMemberData.profile_picture,
-          //           project_role: member.role,
-          //           main_role: fetchedMemberData.main_role,
-          //         };
-          //         fetchedMembersData.push(refinedMemberData);
-          //       })
-          //   )
-          // ).then(() => setNewMembersData(fetchedMembersData));
-
-          // Fetching currentUser Friends
           const currentUserFriendsPromise = Promise.all(
             project.members.map((member) =>
               axios.get(`http://localhost:5000/users/${member.id}`)
@@ -225,7 +145,7 @@ export default function PageProjectEdit(props) {
   function onBackClick() {
     // TODO this should throw an "Are you sure" popup before allowing
     window.location.href='/project/' + projectID;
-  }
+  };
 
   // * Render
   return (
