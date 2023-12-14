@@ -18,15 +18,19 @@ export default function ItemAvatarCircle(props) {
   const [avatarUrl, setAvatarUrl] = useState('');
 
   useEffect(() => {
-    axios.get('http://localhost:5000/users/' + props.userID)
-    .then(
+    if (props.userID !== 'Unassigned') {
+      axios.get('http://localhost:5000/users/' + props.userID)
+      .then(
       res => {
         const userData = res.data;
         if (userData.profile_picture) {
           setAvatarUrl(userData.profile_picture);
         }
       }
-    )
+      )
+    } else {
+      setAvatarUrl('https://pasrc.princeton.edu/sites/g/files/toruqf431/files/styles/freeform_750w/public/2021-03/blank-profile-picture-973460_1280.jpg');
+    }
   }, []); // Dependency array ensures the effect runs when userId changes
 
   // * Render

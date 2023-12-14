@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // * Importing other Components
 // import CardProjectInfo from './section-project-info.component.js';
-import ItemTask from '../items/item-task.component.js';
+import ItemEditTask from '../items/item-edit-task.component.js';
 // import CardTask from './card-task.component.js';
 
 // * Importing images/SVG
@@ -14,12 +14,14 @@ import ItemTask from '../items/item-task.component.js';
 // * Stylesheets
 import './card-project-tasks.component.scss';
 
-export default function CardProjecTasks(props) {
+export default function CardProjectEditTasks(props) {
   const [filterMode, setFilterMode] = useState('All Tasks');
   const [tasks, setTasks] = useState([]);
   const [myTasks, setMyTasks] = useState([]);
   const [allDoneTasks, setAllDoneTasks] = useState(0);
   const [myDoneTasks, setMyDoneTasks] = useState(0);
+
+  console.log('MOUNT');
 
   function handleToggleChange(event) {
     setFilterMode(event.target.value);
@@ -27,10 +29,17 @@ export default function CardProjecTasks(props) {
 
   // * Fetch Task Data from DB on mount
   useEffect(
-    () =>{
-      fetchTasksData(props.projectData.tasks);
+    () => {
+      setTasks(props.newTasksData);
+      
+      const myUpdatedTasks = props.newTasksData.filter((task) =>
+        task.owner == props.currentUser
+      );
+      
+      setMyTasks(myUpdatedTasks);
+      calculateDoneTasks(props.newTasksData);
     },
-    []
+    [props.newTasksData]
   );
 
   // * Calculate allDoneTasks every time tasks is updated
@@ -44,7 +53,7 @@ export default function CardProjecTasks(props) {
   );
 
   function calculateDoneTasks(tasks) {
-    console.log(`RUN SectionProjectTasks -> calculateallDoneTasks()`); 
+    console.log(`RUN SectionProjectTasks -> calculateDoneTasks()`); 
 
     let resultsAll = 0;
     let resultsMy = 0;
@@ -81,58 +90,38 @@ export default function CardProjecTasks(props) {
       );
   };
 
-  function tickTask(taskID) {
-    console.log(tasks);
-    const taskIndex = tasks.findIndex(task => task.id === taskID);
-    const updatedTasks = [...tasks];
-    updatedTasks[taskIndex].done = !updatedTasks[taskIndex].done;
-    setTasks(updatedTasks);
+  // function fetchTasksData(taskIDArray) {
+  //   console.log(`RUN SectionProjectTasks -> fetchTasksData()`); 
 
-    axios.post(
-      'http://localhost:5000/tasks/check/' + taskID,
-      {
-        done: updatedTasks[taskIndex].done
-      }
-    )
-      .then(
-        () => {
-          
-        }
-      );
-  };
+  //   const updatedTasks = [];
 
-  function fetchTasksData(taskIDArray) {
-    console.log(`RUN SectionProjectTasks -> fetchTasksData()`); 
+  //   Promise.all(
+  //     taskIDArray.map((taskID) =>
+  //       axios.get(`http://localhost:5000/tasks/${taskID}`)
+  //         .then(
+  //           (res) => {
+  //             const fetchedTaskData = res.data;
+  //             const refinedTaskData = {
+  //               id: taskID,
+  //               done: fetchedTaskData.done,
+  //               owner: fetchedTaskData.owner
+  //             };
+  //             updatedTasks.push(refinedTaskData);
+  //           }
+  //         )
+  //     )
+  //   )
+  //     .then(() => {
+  //       // After all requests are complete, update the state with the array of refinedTaskData
+  //       setTasks(updatedTasks);
 
-    const updatedTasks = [];
+  //       const myUpdatedTasks = updatedTasks.filter((task) =>
+  //         task.owner == props.currentUser
+  //       );
 
-    Promise.all(
-      taskIDArray.map((taskID) =>
-        axios.get(`http://localhost:5000/tasks/${taskID}`)
-          .then(
-            (res) => {
-              const fetchedTaskData = res.data;
-              const refinedTaskData = {
-                id: taskID,
-                done: fetchedTaskData.done,
-                owner: fetchedTaskData.owner
-              };
-              updatedTasks.push(refinedTaskData);
-            }
-          )
-      )
-    )
-      .then(() => {
-        // After all requests are complete, update the state with the array of refinedTaskData
-        setTasks(updatedTasks);
-
-        const myUpdatedTasks = updatedTasks.filter((task) =>
-          task.owner == props.currentUser
-        );
-
-        setMyTasks(myUpdatedTasks);
-      })
-  };
+  //       setMyTasks(myUpdatedTasks);
+  //     })
+  // };
 
   // * Render
   return (
@@ -209,18 +198,23 @@ export default function CardProjecTasks(props) {
         </div>
         <div className="body">
           {
-            props.projectData.tasks.map(
-              (taskID) => {
-                return <ItemTask 
-                    taskID={taskID}
-                    key={taskID}
-                    currentUser={props.currentUser}
-                    filterMode={filterMode}
-                    tickTask={tickTask}
-                    carded={true}
-                  />
-              }
-            )
+            (tasks)
+            ? tasks.map(
+                (taskData) => {
+                  return (
+                    <ItemEditTask 
+                      taskData={taskData}
+                      // taskID={taskID}
+                      key={taskData._id}
+                      currentUser={props.currentUser}
+                      filterMode={filterMode}
+                      // tickTask={tickTask}
+                      carded={true}
+                    />
+                  );
+                }
+              )
+            : ''
           }
         </div>
       </div>

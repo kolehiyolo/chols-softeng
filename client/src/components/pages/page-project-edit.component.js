@@ -45,12 +45,6 @@ export default function PageProjectEdit(props) {
   );
 
   function removeFriendsWhoAreMembers(fetchedMembersData, fetchedCurrentUserFriendsData) {
-    console.log('removeFriendsWhoAreMembers()');
-    console.log('newMembersData');
-    console.log(fetchedMembersData);
-    console.log('oldCurrentUserFriendsData');
-    console.log(fetchedCurrentUserFriendsData);
-
     if (fetchedMembersData !== undefined && fetchedCurrentUserFriendsData !== undefined) {
       // Extract _id values from newMembersData array
       const newMembersIds = fetchedMembersData.map(user => user._id);
@@ -268,14 +262,25 @@ export default function PageProjectEdit(props) {
           currentUserFriendsData={currentUserFriendsData}
           setCurrentUserFriendsData={setCurrentUserFriendsData}
         />
-        {/* {
-          (oldProjectData.length !== 0)
+        {
+          (newTasksData !== undefined)
           ? <CardProjectEditTasks 
               projectData={oldProjectData}
               currentUser={props.currentUser}
+              oldProjectData={oldProjectData}
+              oldTasksData={oldTasksData}
+              oldMembersData={oldMembersData}
+              newProjectData={newProjectData}
+              newTasksData={newTasksData}
+              newMembersData={newMembersData}
+              setNewProjectData={setNewProjectData}
+              setNewTasksData={setNewTasksData}
+              setNewMembersData={setNewMembersData}
+              currentUserFriendsData={currentUserFriendsData}
+              setCurrentUserFriendsData={setCurrentUserFriendsData}
             />
           : ''
-        } */}
+        }
       </div>
     </div>
 
