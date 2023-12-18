@@ -22,7 +22,7 @@ export default function CardProjectEditInfo(props) {
   // console.log('MOUNT CardProjectVertical()');
   // const [doneStatus, setDoneStatus] = useState(props.projectData.done);
   const [projectPriorityClass, setProjectPriorityClass] = useState();
-  const [newPriority, setNewPriority] = useState();
+  const [newPriority, setNewPriority] = useState(props.oldProjectData.priority);
   const [newName, setNewName] = useState(props.oldProjectData.name);
   const [newDescription, setNewDescription] = useState(props.oldProjectData.description);
   const [newDue, setNewDue] = useState(props.oldProjectData.due);
@@ -33,6 +33,7 @@ export default function CardProjectEditInfo(props) {
       setNewName(props.oldProjectData.name);
       setNewDescription(props.oldProjectData.description);
       setNewDue(props.oldProjectData.due);
+      // setNewPriority(props.oldProjectData.priority);
     },
     [props.oldProjectData]
   );
@@ -57,7 +58,7 @@ export default function CardProjectEditInfo(props) {
     
     setNewPriority(projectPriority);
     setProjectPriorityClass(result);
-    updateNewProjectData('priority', newPriority);
+    updateNewProjectData('priority', projectPriority);
   };
 
   function onPriorityInputChange(event) {
@@ -66,13 +67,15 @@ export default function CardProjectEditInfo(props) {
   }
 
   // * When "Edit" is clicked
-  function onEditClick() {
+  function onSaveClick() {
     console.log(`RUN CardProjectInfo -> onEditClick()`); 
+    props.onProjectSaveClick();
   };
 
   // * When "Delete" is clicked
   function onDeleteClick() {
     console.log(`RUN CardProjectInfo -> onDeleteClick()`); 
+    props.onProjectDeleteClick();
   };
 
   function updateField(event) {
@@ -100,8 +103,6 @@ export default function CardProjectEditInfo(props) {
       prevValue => {
         let result = {...prevValue, [property]: value};
 
-        // console.log(result);
-
         return result;
       }
     );
@@ -127,14 +128,10 @@ export default function CardProjectEditInfo(props) {
             <option className='alert alert-warning' value="Medium">Medium</option>
             <option className='alert alert-success' value="Low">Low</option>
           </select>
-          {/* <div className="project-priority alert alert-danger">{props.oldProjectData.priority}</div> */}
           <DatePicker
             selected={new Date((newDue != undefined) ? newDue : '01-01-2000')} 
             onChange={onDateChange}
           />
-          {/* <div className="priority-due alert alert-secondary">
-            {new Date(props.oldProjectData.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-          </div> */}
         </div>
         <div className="group-3">
           <SectionProjectEditMembers
@@ -149,6 +146,9 @@ export default function CardProjectEditInfo(props) {
             setNewMembersData={props.setNewMembersData}
             currentUserFriendsData={props.currentUserFriendsData}
             setCurrentUserFriendsData={props.setCurrentUserFriendsData}
+            allTasksAreAssigned={props.allTasksAreAssigned}
+            setAllTasksAreAssigned={props.setAllTasksAreAssigned}
+            currentUser={props.currentUser}
           />
         </div>
         <div className="group-4">
@@ -157,11 +157,11 @@ export default function CardProjectEditInfo(props) {
               className="edit btn btn-secondary"
               onClick={
                 () => {
-                  onEditClick()
+                  onSaveClick()
                 }
               }
               >
-                Edit
+                Save
             </button>
             <button 
               className="delete btn btn-danger"

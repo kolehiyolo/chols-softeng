@@ -28,7 +28,7 @@ export default function ItemAssignee(props) {
   // * Fetch Member Data from DB on mount
   useEffect(
     () =>{
-      console.log('ASSIGNEE ADDED');
+      // console.log('ASSIGNEE ADDED');
     },
     []
   );

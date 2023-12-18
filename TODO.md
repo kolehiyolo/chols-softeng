@@ -1,5 +1,12 @@
-1. It accepts 2 arrays: newMembersData and currentUserFriendsData
-2. Both are arrays of objects, objects that represent user data
-3. All objects from both arrays have _id property, and each _id represents a user
-4. A user can be in both arrays or just one or be not included in either
-5. I want the function to look for any currentUserFriendsData[] user and check if in newMembersdata[], there's an object with the same _id, and if so, remove it from the currentUserFriendsData[]
+Rewrite this so that onProjectDeleteClick() triggers the react-bootstrap modal I wrote PopupWarnWOptions (popup-warn-w-options.component.js) pops up. Pass on the appropriate props. When the confirm button is clicked in the pop up, the deleteProject() function is triggered
+
+This is a sample component call, rewrite the value of the props passed as necessary
+  showModal={showDeleteModal}
+  handleClose={() => setShowDeleteModal(false)}
+  title="Delete Task"
+  subtitle="Are you sure you want to delete this task?"
+  confirmButtonText="Confirm"
+  confirmVariant="danger"
+  cancelButtonText="Cancel"
+  onConfirm={deleteTask}
+  onCancel={onCancelClick}

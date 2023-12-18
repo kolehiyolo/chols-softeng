@@ -86,10 +86,10 @@ router.route('/add').post(
     console.log(`\n`);
 
     newTask.save()
-      .then(() => {
+      .then(task => {
         console.log(` - Success! Task added`);
         console.log(`\n`);
-        res.json(`Success! Task added`);
+        res.json({ _id: task._id });
       })
       .catch(err => {
         console.log(` - Failure! Didn't add Task`);

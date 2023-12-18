@@ -46,8 +46,8 @@ export default function CardProjectEditTasks(props) {
   // * Calculate allDoneTasks every time tasks is updated
   useEffect(
     () =>{
-      console.log('tasks Updated');
-      console.log(tasks);
+      // console.log('tasks Updated');
+      // console.log(tasks);
       calculateDoneTasks(tasks);
     },
     [tasks]
@@ -57,7 +57,7 @@ export default function CardProjectEditTasks(props) {
     let resultsAll = 0;
     let resultsMy = 0;
       
-    console.log(tasks);
+    // console.log(tasks);
     tasks.forEach(
       (task) => {
         if (task.done) {
@@ -97,7 +97,7 @@ export default function CardProjectEditTasks(props) {
   };
 
   function onAddMemberClick() {
-    console.log('onAddMemberClick');
+    // console.log('onAddMemberClick');
     handleAddTaskShow();
   };
 

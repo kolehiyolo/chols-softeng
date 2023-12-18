@@ -1,5 +1,5 @@
 // src/components/MyModal.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import Select from 'react-select';
 
@@ -15,23 +15,34 @@ export default function PopupAddMember(props) {
       profile_picture: '',
       main_role: '',
       project_role: '',
+      projects: '',
     }
   );
 
+  useEffect(
+    () =>{
+      // fetchAllOldData();
+    },
+    [props.currentUserFriendsData]
+  );
+  
   function onSelectFriendChange(selectedOption) {
-    console.log(selectedOption);
+    // // console.log(selectedOption);
 
     setNewMemberData(
       prevData => {
+        // Do the ff only if the props.newProjectData._id is not yet in the selectedOption.projects already
+
         const result = {
           ...prevData,
           '_id': selectedOption._id,
           'name': selectedOption.name,
           'profile_picture': selectedOption.profile_picture,
-          'main_role': selectedOption.main_role
+          'main_role': selectedOption.main_role,
+          'projects': selectedOption.projects,
         };
 
-        console.log(result);
+        // // console.log(result);
         return result;
       }
     )
@@ -42,14 +53,14 @@ export default function PopupAddMember(props) {
       prevValue => {
         let result = {...prevValue, 'project_role': event.target.value };
 
-        console.log(result);
+        // // console.log(result);
         return result;
       }
     );
   };
 
   function onCancelClick() {
-    console.log('onCancelClick()');
+    // console.log('onCancelClick()');
     props.setShowModal(false);
     props.handleClose();
     setNewMemberData({
@@ -58,19 +69,23 @@ export default function PopupAddMember(props) {
       profile_picture: '',
       main_role: '',
       project_role: '',
+      projects: '',
     });
   };
   
   function onSaveClick() {
-    console.log('onSaveClick()');
+    // console.log('onSaveClick()');
 
     props.setNewMembersData(
       prevValue => {        
         const updatedMembersData = [...prevValue];
+        if (!newMemberData.projects.includes(props.newProjectData._id)) {
+          newMemberData.projects.push(props.newProjectData._id);
+        }
         updatedMembersData.push(newMemberData);
         
-        console.log(`updatedMembersData`);
-        console.log(updatedMembersData);
+        // console.log(`updatedMembersData`);
+        // console.log(updatedMembersData);
 
         return updatedMembersData;
       }
@@ -84,6 +99,7 @@ export default function PopupAddMember(props) {
       profile_picture: '',
       main_role: '',
       project_role: '',
+      projects: '',
     });
   };
 

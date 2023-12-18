@@ -7,8 +7,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 // * Importing other Components
 import ItemAssignee from '../items/item-assignee.component.js';
-
-// export default function TestModal({ props.showModal, props.handleClose }) {
+import PopupWarnWOptions from './popup-warn-w-options.component.js';
 export default function PopupEditTask(props) {
   const [updatedTaskData, setUpdatedTaskData] = useState(
     {
@@ -32,10 +31,17 @@ export default function PopupEditTask(props) {
       project_role: '',
     }
   );
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   useEffect(
     () =>{
-      setUpdatedTaskData(props.taskData);
+      initializeUpdatedTaskData();
+    },
+    [props.taskData, props.newMembersData]
+  );
+
+  function initializeUpdatedTaskData() {
+    setUpdatedTaskData(props.taskData);
       if (props.newMembersData !== undefined) {
         setAssigneeData(
           () => {
@@ -52,24 +58,16 @@ export default function PopupEditTask(props) {
             }
           }
         );
-        console.log('BOLLOCKS');
-        console.log(props.newMembersData.find(user => user._id === props.taskData.owner));
       };
-    },
-    [props.taskData, props.newMembersData]
-  );
+  };
 
   function onSelectedMemberChange(selectedOption) {
-    console.log(selectedOption);
-
     setUpdatedTaskData(
       prevData => {
         const result = {
           ...prevData,
           'owner': selectedOption._id,
         };
-
-        console.log(result);
         return result;
       }
     );
@@ -84,8 +82,6 @@ export default function PopupEditTask(props) {
           'main_role': selectedOption.main_role,
           'project_role': selectedOption.project_role,    
         };
-
-        console.log(result);
         return result;
       }
     );
@@ -95,8 +91,6 @@ export default function PopupEditTask(props) {
     setUpdatedTaskData(
       prevValue => {
         let result = {...prevValue, 'name': event.target.value };
-
-        console.log(result);
         return result;
       }
     );
@@ -106,47 +100,39 @@ export default function PopupEditTask(props) {
     setUpdatedTaskData(
       prevValue => {
         let result = {...prevValue, 'due': date };
-
-        console.log(result);
         return result;
       }
     );
   };
 
   function onCancelClick() {
-    console.log('onCancelClick()');
     props.setShowEditModal(false);
     props.handleEditClose();
-    setUpdatedTaskData({
-      description: '',
-      done: '',
-      due: '',
-      name: '',
-      owner: '',
-      priority: '',
-      project: '',
-      start: '',
-      _id: '',
-    });
+    setShowDeleteModal(false);
+    initializeUpdatedTaskData();
+    // setUpdatedTaskData({
+    //   description: '',
+    //   done: '',
+    //   due: '',
+    //   name: '',
+    //   owner: '',
+    //   priority: '',
+    //   project: '',
+    //   start: '',
+    //   _id: '',
+    // });
   };
   
   function onSaveClick() {
-    console.log('onSaveClick()');
-
     props.setNewTasksData(
       prevValue => {        
         const updatedTasksData = prevValue.map(task =>
           task._id === updatedTaskData._id ? updatedTaskData : task
         );
-        
-        console.log(`updatedTasksData`);
-        console.log(updatedTasksData);
-
         return updatedTasksData;
       }
     );
 
-    props.setShowEditModal(false);
     props.handleEditClose();
     setUpdatedTaskData({
       description: '',
@@ -162,13 +148,14 @@ export default function PopupEditTask(props) {
   };
 
   function onDeleteClick() {
+    props.handleEditClose();
+    setShowDeleteModal(true);
+  };
+
+  function deleteTask() {
     props.setNewTasksData(
       prevValue => {        
         const updatedTasksData = prevValue.filter(task => task._id !== props.taskData._id);
-        
-        console.log(`updatedTasksData`);
-        console.log(updatedTasksData);
-
         return updatedTasksData;
       }
     );
@@ -189,8 +176,21 @@ export default function PopupEditTask(props) {
   };
 
   return (
-    (props.showEditModal)
-    ? (
+    <>
+      {showDeleteModal && (
+        <PopupWarnWOptions
+          showModal={showDeleteModal}
+          handleClose={() => setShowDeleteModal(false)}
+          title="Delete Task"
+          subtitle="Are you sure you want to delete this task?"
+          confirmButtonText="Confirm"
+          confirmVariant="danger"
+          cancelButtonText="Cancel"
+          onConfirm={deleteTask}
+          onCancel={onCancelClick}
+        />
+      )}
+      {props.showEditModal && (
         <Modal show={props.showEditModal} onHide={props.handleEditClose}>
           <Modal.Header closeButton>
             <Modal.Title>Edit Task</Modal.Title>
@@ -222,7 +222,7 @@ export default function PopupEditTask(props) {
                     </div>
                     <div className='right'>
                       <p className='name'>{assigneeData.name.first} {assigneeData.name.last}</p>      
-                      <p className='role'>{assigneeData.main_role}</p>      
+                      <p className='role'>{assigneeData.project_role}</p>      
                     </div>
                   </div>
                   <div className='group-2'>
@@ -263,7 +263,7 @@ export default function PopupEditTask(props) {
             </Button>
           </Modal.Footer>
         </Modal>
-      )
-    : ''
+      )}
+    </>
   );
 };

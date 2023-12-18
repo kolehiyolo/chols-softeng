@@ -14,13 +14,13 @@ export default function PopupAddTask(props) {
     {
       description: '',
       done: '',
-      due: '',
+      due: new Date(),
       name: '',
       owner: '',
       priority: '',
       project: '',
       start: '',
-      _id: '',
+      _id: `newTask-${props.newTasksData.length + 1}`,
     }
   );
   const [assigneeData, setAssigneeData] = useState(
@@ -41,7 +41,7 @@ export default function PopupAddTask(props) {
   );
 
   function onSelectedMemberChange(selectedOption) {
-    console.log(selectedOption);
+    // console.log(selectedOption);
 
     setUpdatedTaskData(
       prevData => {
@@ -50,7 +50,7 @@ export default function PopupAddTask(props) {
           'owner': selectedOption._id,
         };
 
-        console.log(result);
+        // console.log(result);
         return result;
       }
     );
@@ -66,7 +66,7 @@ export default function PopupAddTask(props) {
           'project_role': selectedOption.project_role,    
         };
 
-        console.log(result);
+        // console.log(result);
         return result;
       }
     );
@@ -77,14 +77,14 @@ export default function PopupAddTask(props) {
       prevValue => {
         let result = {...prevValue, 'name': event.target.value };
 
-        console.log(result);
+        // console.log(result);
         return result;
       }
     );
   };
 
   function onCancelClick() {
-    console.log('onCancelClick()');
+    // console.log('onCancelClick()');
     props.setShowAddTaskModal(false);
     props.handleAddTaskClose();
     setUpdatedTaskData({
@@ -110,15 +110,15 @@ export default function PopupAddTask(props) {
   };
   
   function onSaveClick() {
-    console.log('onSaveClick()');
+    // console.log('onSaveClick()');
 
     props.setNewTasksData(
       prevValue => {        
         const updatedTasksData = [...prevValue];
         updatedTasksData.push(updatedTaskData);
         
-        console.log(`updatedTasksData`);
-        console.log(updatedTasksData);
+        // console.log(`updatedTasksData`);
+        // console.log(updatedTasksData);
 
         return updatedTasksData;
       }
@@ -153,8 +153,8 @@ export default function PopupAddTask(props) {
       prevValue => {        
         const updatedTasksData = prevValue.filter(task => task._id !== props.taskData._id);
         
-        console.log(`updatedTasksData`);
-        console.log(updatedTasksData);
+        // console.log(`updatedTasksData`);
+        // console.log(updatedTasksData);
 
         return updatedTasksData;
       }
@@ -189,7 +189,7 @@ export default function PopupAddTask(props) {
       prevValue => {
         let result = {...prevValue, 'due': date };
 
-        console.log(result);
+        // console.log(result);
         return result;
       }
     );
@@ -229,7 +229,7 @@ export default function PopupAddTask(props) {
                     </div>
                     <div className='right'>
                       <p className='name'>{assigneeData.name.first} {assigneeData.name.last}</p>      
-                      <p className='role'>{assigneeData.main_role}</p>      
+                      <p className='role'>{assigneeData.project_role}</p>      
                     </div>
                   </div>
                   <div className='group-2'>
@@ -254,9 +254,7 @@ export default function PopupAddTask(props) {
               <label htmlFor="task_name" className="form-label">Task</label>
               <DatePicker
                 selected={
-                  (updatedTaskData.due != '')
-                  ? new Date(updatedTaskData.due)
-                  : new Date()
+                  updatedTaskData.due
                 } 
                 onChange={onDateChange}
               />

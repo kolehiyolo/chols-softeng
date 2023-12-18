@@ -3,7 +3,7 @@ import React, {useState, useEffect} from "react";
 import axios from 'axios';
 
 // * Importing other Components
-import ItemAvatarCircle from './item-avatar-circle.component.js';
+// import ItemAvatarCircle from './item-avatar-circle.component.js';
 
 // * Importing images/SVG
 // import { ReactComponent as SVGCheck } from '../svg/check-circle.svg';
@@ -21,7 +21,8 @@ export default function ItemMember(props) {
         first: '',
         last: ''
       },
-      role: ''
+      project_role: '',
+      profile_picture: '',
     }
   );
 
@@ -41,7 +42,8 @@ export default function ItemMember(props) {
           const fetchedMemberData = res.data;
           const refinedMemberData = {
             name: fetchedMemberData.name,
-            role: props.projectMember.role,
+            project_role: props.projectMember.role,
+            profile_picture: fetchedMemberData.profile_picture,
           }
           setMemberData(refinedMemberData);
         }
@@ -53,13 +55,16 @@ export default function ItemMember(props) {
     <div className='item-task'>
         <div className='group-1'>
           <div className='left'>
-            <ItemAvatarCircle
-              userID={props.projectMember.id}
-            />
+            <div
+              className="item-avatar-circle"
+              key={props.userID}
+            >
+              <img src={memberData.profile_picture} alt={'User ' + props.userID + ' Avatar'} />
+            </div>
           </div>
           <div className='right'>
             <p className='name'>{memberData.name.first} {memberData.name.last}</p>      
-            <p className='role'>{memberData.role}</p>      
+            <p className='role'>{memberData.project_role}</p>      
           </div>
         </div>
         <div className='group-2'>

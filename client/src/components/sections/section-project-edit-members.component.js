@@ -13,18 +13,9 @@ import PopupAddMember from '../popup/popup-add-member.component.js';
 import './section-project-edit-members.component.scss';
 
 export default function SectionProjectEditMembers(props) {
-  const [currentUserFriendsData, setCurrentUserFriendsData] = useState();
   const [showModal, setShowModal] = useState(false);
-
-  // TODO If user adds a new member, their friend list should pop up
   
   // * Fetch Task Data from DB on mount
-  useEffect(
-    () =>{
-    },
-    []
-  );
-
   function handleShow() {
     setShowModal(true);
   };
@@ -56,6 +47,7 @@ export default function SectionProjectEditMembers(props) {
           currentUserFriendsData={props.currentUserFriendsData}
           newMembersData={props.newMembersData}
           setNewMembersData={props.setNewMembersData}
+          newProjectData={props.newProjectData}
         />
       </div>
       <div className='members'>
@@ -71,6 +63,9 @@ export default function SectionProjectEditMembers(props) {
                       setNewMembersData={props.setNewMembersData}
                       projectMemberData={projectMemberData}
                       key={projectMemberData._id}
+                      allTasksAreAssigned={props.allTasksAreAssigned}
+                      setAllTasksAreAssigned={props.setAllTasksAreAssigned}
+                      currentUser={props.currentUser}
                     />
                   )
                 }

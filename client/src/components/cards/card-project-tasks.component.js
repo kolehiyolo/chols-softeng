@@ -66,19 +66,22 @@ export default function CardProjectTasks(props) {
     setAllDoneTasks(resultsAll);
 
     const projectIsDone = (resultsAll == tasks.length) ? true : false;
-    // props.updateDoneStatus(projectIsDone);
 
-    axios.post(
-      'http://localhost:5000/projects/done/' + props.projectData._id,
-      {
-        done: projectIsDone
-      }
-    )
-      .then(
-        () => {
-          
+    if (projectIsDone !== props.projectData.done) {
+      axios.post(
+        'http://localhost:5000/projects/done/' + props.projectData._id,
+        {
+          done: projectIsDone
         }
-      );
+      )
+        .then(
+          () => {
+            
+          }
+        );
+    }
+
+
   };
 
   function tickTask(taskID) {
@@ -218,6 +221,8 @@ export default function CardProjectTasks(props) {
                     filterMode={filterMode}
                     tickTask={tickTask}
                     carded={true}
+                    allTasksAreAssigned={props.allTasksAreAssigned}
+                    setAllTasksAreAssigned={props.setAllTasksAreAssigned}
                   />
               }
             )

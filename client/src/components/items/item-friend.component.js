@@ -15,6 +15,7 @@ import axios from 'axios';
 export default function ItemFriend(props) {
   // console.log('MOUNT CardProjectVertical()');
   // const [doneStatus, setDoneStatus] = useState(props.projectData.done);
+  // console.log('ItemFriend()');
   const [memberData, setMemberData] = useState(
     {
       name: {

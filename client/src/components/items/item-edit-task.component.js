@@ -103,6 +103,8 @@ export default function ItemEditTask(props) {
               setNewMembersData={props.setNewMembersData}
               newTasksData={props.newTasksData}
               setNewTasksData={props.setNewTasksData}
+              allTasksAreAssigned={props.allTasksAreAssigned}
+              setAllTasksAreAssigned={props.setAllTasksAreAssigned}
             />
           </div>
         </div>
