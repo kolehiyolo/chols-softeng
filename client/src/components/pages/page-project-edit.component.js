@@ -170,12 +170,55 @@ export default function PageProjectEdit(props) {
     // Save the newTasksData to the DB
     // Save the newMembersData to the DB
     // Console log the newProjectData, newTasksData, and newMembersData
+    console.log('oldProjectData');
+    console.log(oldProjectData);
     console.log('newProjectData');
     console.log(newProjectData);
+    console.log('oldTasksData');
+    console.log(oldTasksData);
     console.log('newTasksData');
     console.log(newTasksData);
+    console.log('oldMembersData');
+    console.log(oldMembersData);
     console.log('newMembersData');
     console.log(newMembersData);
+
+    
+    // TODO
+    // Save the newMembersData first
+    // Run through newMembersData and check if any of the members are new
+    // You can do this by checking the newMembersData with the oldMembersData
+    // If newMember is not in oldMembersData, then it is a new member and you must do the ff:
+      // 1. Create an object for the newMemberData with {id: newMember._id, role: newMember.project_role}
+      // 2. Add the newMemberData to newProjectData.members
+      // 3. Do an axios.post request to http://localhost:5000/users/update/projects/:id with the body newMember.projects
+    // If newMember is in oldMembersData, then it is an old member and you must do the ff:
+      // 1. Find the matched oldMember data
+      // 2. Update the role of the oldMemberData with the newMember.project_role
+    // If oldMember is not in newMembersData, then it is a deleted member and you must do the ff:
+      // 1. Find the matched oldMember data
+      // 2. Remove the oldMemberData from newProjectData.members
+      // 3. Remove the project from the oldMemberData.projects
+      // 3. Do an axios.post request to http://localhost:5000/users/update/projects/:id with the body oldMember.projects
+
+    // Save the newTasksData second
+    // Run through newTasksData and check if any of the tasks are new
+    // You can do this by checking the newTasksData with the oldTasksData
+    // If newTask is not in oldTasksData, then it is a new task and you must do the ff:
+      // 1. Create an object for the newTaskData
+      // 3. Do an axios.post request to http://localhost:5000/tasks/add with the body newTaskData
+      // 3. Get the response from the axios.post request
+      // 3. Add the response, which is the new task's created _id to newProjectData.tasks
+    // If newTask is in oldTasksData, then it is an old task and you must do the ff:
+      // 1. Create an object for the newTaskData
+      // 3. Do an axios.post request to http://localhost:5000/tasks/update/:id with the body newTaskData
+    // If oldTask is not in newTasksData, then it is a deleted task and you must do the ff:
+      // 1. Do an axios.delete request to http://localhost:5000/tasks/:id
+      // 2. Remove the oldTaskData._id from newProjectData.tasks
+    
+    // Save the newProjectData last
+    // Do an axios.post request to http://localhost:5000/projects/update/:id with the body newProjectData
+    // Redirect to the project page
   };
   
   function deleteProject() {
