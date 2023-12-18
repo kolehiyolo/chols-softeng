@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const memberSchema = new Schema({
-  id: {
+  _id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User', // Assuming a reference to the User model
     required: true,

@@ -29,7 +29,7 @@ export default function ItemMember(props) {
   // * Fetch Member Data from DB on mount
   useEffect(
     () =>{
-      fetchMemberData(props.projectMember.id);
+      fetchMemberData(props.projectMember._id);
     },
     []
   );

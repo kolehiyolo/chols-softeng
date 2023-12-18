@@ -65,7 +65,7 @@ export default function CardProjectInfo(props) {
                         return (
                           <ItemMember
                             projectMember={projectMember}
-                            key={projectMember.id}
+                            key={projectMember._id}
                           />
                         )
                       }
