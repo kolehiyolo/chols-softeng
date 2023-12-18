@@ -25,9 +25,15 @@ app.use(express.json());
 // * MongoDB Connection
 const uri = 'mongodb://0.0.0.0:27017/connect_co';
 mongoose.connect(uri, {
-  // useNewUrlParser: true,
+  useNewUrlParser: true,
   // useUnifiedTopology: true,
 });
+const connection = mongoose.connection;
+connection.once('open', 
+  () => {
+    console.log(`MongoDB database connection established successfully`); 
+  }
+);
 
 // * Routes
 const projectRoutes = require('./routes/project.routes');

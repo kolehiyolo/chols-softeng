@@ -117,7 +117,10 @@ export default function PageProjectEdit(props) {
                   fetchedMembersData.push(refinedMemberData);
                 })
             )
-          ).then(() => setNewMembersData(fetchedMembersData))
+          ).then(() => {
+            setNewMembersData(fetchedMembersData);
+            setOldMembersData(fetchedMembersData);
+          })
             .then(() => axios.get(`http://localhost:5000/users/${props.currentUser}`))
             .then((res) => {
               let result = res.data.friends;
@@ -187,43 +190,73 @@ export default function PageProjectEdit(props) {
     // Save the newMembersData first
     // Run through newMembersData and check if any of the members are new
     // You can do this by checking the newMembersData with the oldMembersData
-    // If newMember is not in oldMembersData, then it is a new member and you must do the ff:
+    // TODO If newMember is not in oldMembersData, then it is a new member and you must do the ff:
       // 1. Create an object for the newMemberData with {id: newMember._id, role: newMember.project_role}
       // 2. Add the newMemberData to newProjectData.members
       // 3. Do an axios.post request to http://localhost:5000/users/update/projects/:id with the body newMember.projects
-    // If newMember is in oldMembersData, then it is an old member and you must do the ff:
+    // * If newMember is in oldMembersData, then it is an old member and you must do the ff:
       // 1. Find the matched oldMember data
       // 2. Update the newProjectData.member data with the newMember.project_role
-    // If oldMember is not in newMembersData, then it is a deleted member and you must do the ff:
+    // * If oldMember is not in newMembersData, then it is a deleted member and you must do the ff:
       // 1. Find the matched oldMember data
       // 2. Remove the oldMemberData from newProjectData.members
       // 3. Remove the project from the oldMemberData.projects
       // 3. Do an axios.post request to http://localhost:5000/users/update/projects/:id with the body oldMember.projects
     
     function saveNewMembersData() {
-      // Give me a script that goes through newMembersData and oldMembersData and checks the ff:
-      // If newMembersData has a member that is not in oldMembersData, then it is a new member and you must print "New Member!"
-      // If newMembersData has a member that is in oldMembersData, then it is an old member and you must print "Old Member!"
-      // If oldMembersData has a member that is not in newMembersData, then it is a deleted member and you must print "Deleted Member!"
-
       newMembersData.forEach(newMember => {
         if (oldMembersData.some(oldMember => oldMember._id === newMember._id)) {
           console.log('Old Member!');
-          newProjectData.members.find(member => member.id === newMember._id).role = newMember.project_role;
-          // newMember.project_role;
+          newProjectData.members.find(member => member._id === newMember._id).role = newMember.project_role;
+          console.log('newProjectData.members');
+          console.log(newProjectData.members);
         } else {
           console.log('New Member!');
+
+          console.log('Adding new member to newProjectData.members')
+          newProjectData.members.push({
+            _id: newMember._id,
+            role: newMember.project_role
+          });
+
+          console.log('Adding project to newMemberProjectsList');
+          const newMemberProjectsList = {
+            projects: newMember.projects
+          };
+          console.log(newMemberProjectsList);
+          axios.post(`http://localhost:5000/users/update/projects/${newMember._id}`, newMemberProjectsList)
+            .then(res => console.log(res.data));
+          axios.post(`http://localhost:5000/users/update/projects/${newMember._id}`, {
+            projects: newMember.projects
+          })
+            .then(res => console.log(res.data));
         }
       });
 
       oldMembersData.forEach(oldMember => {
         if (newMembersData.some(newMember => newMember._id === oldMember._id)) {
-          console.log('Old Member!');
+          console.log('Old Member! (Processed this already)');
         } else {
           console.log('Deleted Member!');
+
+          console.log('Removing member from newProjectData.members')
+          newProjectData.members = newProjectData.members.filter(member => member._id !== oldMember._id);
+          console.log(newProjectData.members);
+
+          console.log('Removing project from deletedMemberProjectsList');
+          const deletedMemberProjectsList = {
+            projects: oldMember.projects.filter(project => project !== projectID)
+          };
+          console.log(deletedMemberProjectsList);
+          axios.post(`http://localhost:5000/users/update/projects/${oldMember._id}`, deletedMemberProjectsList)
+            .then(res => console.log(res.data));
         }
       });
     };
+
+    saveNewMembersData();
+    // saveNewTasksData();
+    // saveNewProjectData();
 
     function saveNewTasksData() {
 
@@ -252,9 +285,6 @@ export default function PageProjectEdit(props) {
     // Do an axios.post request to http://localhost:5000/projects/update/:id with the body newProjectData
     // Redirect to the project page
     
-    // saveNewMembersData();
-    // saveNewTasksData();
-    // saveNewProjectData();
   };
   
   function deleteProject() {

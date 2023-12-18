@@ -216,23 +216,22 @@ router.route('/update/:id').post(
 // * Update one User's Projects List by ID
 // ! Can't Test with Postman
 // POST http://localhost:5000/users/update/projects/:id
+// -* Sample accepted req.body data:
+// const sample = {
+//   projects: [
+//     'projectID-1',
+//     'projectID-2',
+//     'projectID-3'
+//   ]
+// };
 router.route('/update/projects/:id').post(
   (req, res) => {
     console.log('POST /users/update/projects/' + req.params.id);
 
-    // -* Sample accepted req.body data:
-    const sample = {
-      projects: [
-        'projectID-1',
-        'projectID-2',
-        'projectID-3'
-      ]
-    };
-
     User.findById(req.params.id)
       .then(
         user => {
-          console.log(` - User ${user.body.name.first} ${user.body.name.last} Found! `);
+          console.log(` - User ${user.name.first} ${user.name.last} Found! `);
 
           user.projects = req.body.projects;
 
