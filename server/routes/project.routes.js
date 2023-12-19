@@ -141,7 +141,7 @@ router.route('/:id').delete(
 // * Update one Project by ID
 // ! Can't Test with Postman
 // POST http://localhost:5000/projects/update/:id
-router.route('/update/:id').post(
+router.route('/update/:id/:from').post(
   (req, res) => {
     console.log('POST /projects/update/' + req.params.id);
     
@@ -174,10 +174,12 @@ router.route('/update/:id').post(
       ]
     };
 
+    const timestamp = Date.now();
+
     Project.findById(req.params.id)
       .then(
         project => {
-          console.log(` - Project "${project.name}" Found! `);
+          console.log(`${timestamp} - Project "${project.name}" Found!`);
 
           project.name = req.body.name;
           project.description = req.body.description;
@@ -188,25 +190,26 @@ router.route('/update/:id').post(
           project.members = req.body.members;
           project.tasks = req.body.tasks;
 
-          console.log(` - updatedProject: `);
+          console.log(`${timestamp} - updatedProject: `);
           console.log(project);
           console.log(`\n`);
           
           project.save()
             .then(() => {
-              console.log(` - Success! Project updated`);
+              console.log(`${timestamp} - Success! Project updated ${req.params.from}`);
               console.log(`\n`);
               res.json(`Success! Project updated`);
             })
             .catch(err => {
-              console.log(` - Failure! Didn't update User`);
+              console.log(`${timestamp} - Failure! Didn't update Project ${req.params.from}`);
               console.log(`\n`);
               res.status(400).json(`Error: ${err}`);
             });
         }
       )
       .catch(err => {
-        console.log(` - Failure! Didn't update Project since can't find Project by ID`);
+        console.log(`${timestamp} - Failure! Didn't update Project since can't find Project by ID`);
+        console.log(err);
         console.log(`\n`);
         res.status(400).json(`Error: ${err}`);
       });

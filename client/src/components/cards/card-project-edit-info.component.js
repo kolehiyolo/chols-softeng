@@ -98,7 +98,7 @@ export default function CardProjectEditInfo(props) {
   };
 
   function updateNewProjectData(property, value) {
-    console.log('TRIGGER');
+    // console.log('TRIGGER');
     props.setNewProjectData(
       prevValue => {
         let result = {...prevValue, [property]: value};

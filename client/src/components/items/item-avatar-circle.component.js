@@ -17,6 +17,8 @@ export default function ItemAvatarCircle(props) {
   // console.log('MOUNT ItemAvatarCircle()');
   const [avatarUrl, setAvatarUrl] = useState('');
 
+  console.log(props.userID + ' ' + props.parent);
+
   useEffect(() => {
     if (props.userID !== 'Unassigned') {
       axios.get('http://localhost:5000/users/' + props.userID)

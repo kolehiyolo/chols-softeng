@@ -60,15 +60,13 @@ export default function PageProjectNew(props) {
     [newMembersData, oldCurrentUserFriendsData]
   );
 
-  useEffect(
-    () =>{
-      console.log('newProjectID changed!');
-      console.log(newProjectID);
-      saveNewMembersData();
-      saveNewTasksData();
-    },
-    [newProjectID]
-  );
+  // useEffect(
+  //   () =>{
+  //     saveNewMembersData();
+  //     saveNewTasksData();
+  //   },
+  //   [newProjectID]
+  // );
 
   function removeFriendsWhoAreMembers(fetchedMembersData, fetchedCurrentUserFriendsData) {
     if (fetchedMembersData !== undefined && fetchedCurrentUserFriendsData !== undefined) {
@@ -147,9 +145,9 @@ export default function PageProjectNew(props) {
   };
 
   function saveProject() {
-    console.log('Saving Project');
+    console.log('saveProject()');
     setShowSaveModal(false);
-
+  
     console.log('newProjectData');
     console.log(newProjectData);
     console.log('newTasksData');
@@ -158,7 +156,7 @@ export default function PageProjectNew(props) {
     console.log(newMembersData);
   
     function saveNewProjectData() {
-      console.log('Saving New Project');
+      console.log('saveNewProjectData');
       return new Promise((resolve, reject) => {
         const newProject = {
           name: newProjectData.name,
@@ -174,7 +172,7 @@ export default function PageProjectNew(props) {
           .then(res => {
             console.log('New Project Added! ID:')
             console.log(res.data._id);
-
+    
             setNewProjectData(
               (prevValue) => {
                 const result = {
@@ -185,64 +183,69 @@ export default function PageProjectNew(props) {
               }
             );
             setNewProjectID(res.data._id);
-
-            resolve(); // Resolve the promise
+    
+            resolve(res.data._id); // Resolve the promise with the new project ID
           })
           .catch(error => {
             reject(error); // Reject the promise if there's an error
           });
       });
-    }
-
-
-
-    saveNewProjectData();
-  };
-
-  function saveNewMembersData() {
-    newMembersData.forEach(newMember => {
-      newProjectData.members.push({
-        _id: newMember._id,
-        role: newMember.project_role
-      });
-
-      const newMemberProjectsList = {
-        projects: newMember.projects
-      };
-
-      axios.post(`http://localhost:5000/users/update/projects/${newMember._id}`, newMemberProjectsList)
-        .then(res => console.log(res.data));
-
-      axios.post(`http://localhost:5000/projects/update/${newProjectID}`, newProjectData)
-      .then(res => console.log(res.data));
-    });
-  };
+    }    
   
-  function saveNewTasksData() {
-    newTasksData.forEach(newTask => {
-      console.log('New Task!');
-      const newTaskData = {
-        name: newTask.name,
-        start: newTask.start,
-        due: newTask.due,
-        done: false,
-        owner: newTask.owner,
-        project: newProjectData._id,
-        priority: newTask.priority,
-        description: newTask.description
-      }
-      axios.post(`http://localhost:5000/tasks/add`, newTaskData)
-        .then(res => {
-          console.log('New Task Added! ID:')
-          console.log(res.data);
-          newProjectData.tasks.push(res.data);
-          console.log(newProjectData.tasks);
-
-          axios.post(`http://localhost:5000/projects/update/${newProjectID}`, newProjectData)
-            .then(res => console.log(res.data));
+    function saveNewMembersData() {
+      console.log('saveNewMembersData()');
+      const memberPromises = newMembersData.map(newMember => {
+        console.log('New Member!');
+        newProjectData.members.push({
+          _id: newMember._id,
+          role: newMember.project_role
         });
-    });
-  };    
+  
+        const newMemberProjectsList = {
+          projects: newMember.projects
+        };
+  
+        return axios.post(`http://localhost:5000/users/update/projects/${newMember._id}`, newMemberProjectsList);
+      });
+  
+      return Promise.all(memberPromises);
+    }
+  
+    function saveNewTasksData(newProjectID) {
+      console.log('saveNewTasksData()');
+      const taskPromises = newTasksData.map(newTask => {
+        console.log('New Task!');
+        const newTaskData = {
+          name: newTask.name,
+          start: newTask.start,
+          due: newTask.due,
+          done: false,
+          owner: newTask.owner,
+          project: newProjectID,
+          priority: newTask.priority,
+          description: newTask.description
+        }
+  
+        return axios.post(`http://localhost:5000/tasks/add`, newTaskData)
+          .then(res => {
+            newProjectData.tasks.push(res.data);
+          });
+      });
+  
+      return Promise.all(taskPromises);
+    }
+  
+    function finalProjectSave(newProjectID) {
+      console.log('finalProjectSave()');
+      axios.post(`http://localhost:5000/projects/update/${newProjectID}/newTask`, newProjectData)
+        .then(res => console.log(res.data));
+    };
+  
+    saveNewProjectData()
+      .then(newProjectID => Promise.all([saveNewMembersData(newProjectID), saveNewTasksData(newProjectID)]).then(() => newProjectID))
+      .then(newProjectID => finalProjectSave(newProjectID))
+      .catch(error => console.error(error));
+  };
   
   function deleteProject() {
     console.log('Deleting Project');

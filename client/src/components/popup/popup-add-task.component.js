@@ -90,13 +90,13 @@ export default function PopupAddTask(props) {
     setUpdatedTaskData({
       description: '',
       done: '',
-      due: '',
+      due: new Date(),
       name: '',
       owner: '',
       priority: '',
       project: '',
       start: '',
-      _id: '',
+      _id: `newTask-${props.newTasksData.length + 2}`,
     });
     setAssigneeData(
       {
@@ -133,13 +133,13 @@ export default function PopupAddTask(props) {
     setUpdatedTaskData({
       description: '',
       done: '',
-      due: '',
+      due: new Date(),
       name: '',
       owner: '',
       priority: '',
       project: '',
       start: '',
-      _id: '',
+      _id: `newTask-${props.newTasksData.length + 2}`,
     });
     setAssigneeData(
       {

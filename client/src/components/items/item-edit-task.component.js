@@ -62,6 +62,7 @@ export default function ItemEditTask(props) {
             <ItemAvatarCircle
               userID={props.taskData.owner}
               key={props.taskData.owner}
+              parent='ItemEditTask'
             />
             <p>{props.taskData.name}</p>      
           </div>
