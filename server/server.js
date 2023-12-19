@@ -8,10 +8,16 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const PORT = process.env.PORT || 5000;
 
+// * Initializing Passport.js
+const passport = require('passport');
+require('./config/passport')(passport);
+
 // * Initializing Express
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(passport.initialize());
+app.use(passport.session());
 // app.use(express.urlencoded({ extended: true }));
 
 // * Register the bodyParser middleware

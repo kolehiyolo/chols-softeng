@@ -126,6 +126,7 @@ router.route('/add').post(
     const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
+    const profile_picture = 'https://pasrc.princeton.edu/sites/g/files/toruqf431/files/styles/freeform_750w/public/2021-03/blank-profile-picture-973460_1280.jpg';
 
     const newUser = new User(
       {
@@ -133,7 +134,8 @@ router.route('/add').post(
         main_role,
         username,
         password,
-        email
+        email,
+        profile_picture
       }
     );
 
@@ -299,5 +301,59 @@ router.route('/update/friends/:id').post(
       });
   }
 );
+
+router.post('/register', (req, res) => {
+  const { name_first, name_last, main_role, username, email, password, password2 } = req.body;
+  let errors = [];
+
+  // Check required fields
+  if (!name_first || !name_last || !main_role || !username || !email || !password || !password2) {
+    errors.push({ msg: 'Please fill in all fields' });
+  }
+
+  // Check passwords match
+  if (password !== password2) {
+    errors.push({ msg: 'Passwords do not match' });
+  }
+
+  // Check if user already exists
+  User.findOne({ username: username }).then(user => {
+    if (user) {
+      errors.push({ msg: 'Username is already registered' });
+    } else {
+      const newUser = new User({
+        name: {
+          first: name_first,
+          last: name_last
+        },
+        main_role,
+        username,
+        email,
+        password
+      });
+
+      // Hash password
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if (err) throw err;
+          newUser.password = hash;
+          newUser.save()
+            .then(user => {
+              res.redirect('/login');
+            })
+            .catch(err => console.log(err));
+        });
+      });
+    }
+  });
+});
+
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/projects',
+    failureRedirect: '/login',
+    failureFlash: true
+  })(req, res, next);
+});
 
 module.exports = router;
