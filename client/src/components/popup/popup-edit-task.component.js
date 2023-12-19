@@ -13,7 +13,7 @@ export default function PopupEditTask(props) {
     {
       description: '',
       done: '',
-      due: '',
+      due: new Date(),
       name: '',
       owner: '',
       priority: '',
@@ -113,7 +113,7 @@ export default function PopupEditTask(props) {
     // setUpdatedTaskData({
     //   description: '',
     //   done: '',
-    //   due: '',
+    //   due: new Date(),
     //   name: '',
     //   owner: '',
     //   priority: '',
@@ -137,7 +137,7 @@ export default function PopupEditTask(props) {
     setUpdatedTaskData({
       description: '',
       done: '',
-      due: '',
+      due: new Date(),
       name: '',
       owner: '',
       priority: '',
@@ -165,7 +165,7 @@ export default function PopupEditTask(props) {
     setUpdatedTaskData({
       description: '',
       done: '',
-      due: '',
+      due: new Date(),
       name: '',
       owner: '',
       priority: '',
@@ -246,7 +246,7 @@ export default function PopupEditTask(props) {
             <div className="group-4">
               <label htmlFor="task_name" className="form-label">Task</label>
               <DatePicker
-                selected={new Date((updatedTaskData.due != undefined) ? updatedTaskData.due : '01-01-2000')} 
+                selected={updatedTaskData.due} 
                 onChange={onDateChange}
               />
             </div>

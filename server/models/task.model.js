@@ -9,7 +9,7 @@ const taskSchema = new Schema({
   },
   start: {
     type: Date,
-    required: true,
+    // required: true,
   },
   due: {
     type: Date,

@@ -60,8 +60,10 @@ router.route('/add').post(
     };
 
     const name = req.body.name;
-    const start = Date.parse(req.body.date);
-    const due = Date.parse(req.body.date);
+    // const start = Date.parse(req.body.start);
+    // const due = Date.parse(req.body.due);
+    const start = req.body.start;
+    const due = req.body.due;
     const done = req.body.done;
     const owner = req.body.owner;
     const project = req.body.project;
@@ -91,11 +93,11 @@ router.route('/add').post(
         console.log(`\n`);
         res.json({ _id: task._id });
       })
-      .catch(err => {
-        console.log(` - Failure! Didn't add Task`);
-        console.log(`\n`);
-        res.status(400).json(`Error: ${err}`);
-      });
+      // .catch(err => {
+      //   console.log(` - Failure! Didn't add Task`);
+      //   console.log(`\n`);
+      //   res.status(400).json(`Error: ${err}`);
+      // });
   }
 );
 
@@ -143,8 +145,10 @@ router.route('/update/:id').post(
         console.log(` - Task "${task.name}" Found! `);
 
         task.name = req.body.name;
-        task.start = Date.parse(req.body.date);
-        task.due = Date.parse(req.body.date);
+        // task.start = Date.parse(req.body.start);
+        task.start = req.body.start;
+        // task.due = Date.parse(req.body.due);
+        task.due = req.body.due;
         task.done = req.body.done;
         task.owner = req.body.owner;
         task.project = req.body.project;

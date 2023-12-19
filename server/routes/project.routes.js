@@ -104,10 +104,10 @@ router.route('/add').post(
     console.log(`\n`);
 
     newProject.save()
-      .then(() => {
+      .then((project) => {
         console.log(` - Success! Project added`);
         console.log(`\n`);
-        res.json(`Success! Project added`);
+        res.json({ _id: project._id });
       })
       .catch(err => {
         console.log(` - Failure! Didn't add user`);

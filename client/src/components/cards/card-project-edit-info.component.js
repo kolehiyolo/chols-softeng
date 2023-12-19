@@ -22,20 +22,20 @@ export default function CardProjectEditInfo(props) {
   // console.log('MOUNT CardProjectVertical()');
   // const [doneStatus, setDoneStatus] = useState(props.projectData.done);
   const [projectPriorityClass, setProjectPriorityClass] = useState();
-  const [newPriority, setNewPriority] = useState(props.oldProjectData.priority);
-  const [newName, setNewName] = useState(props.oldProjectData.name);
-  const [newDescription, setNewDescription] = useState(props.oldProjectData.description);
-  const [newDue, setNewDue] = useState(props.oldProjectData.due);
+  const [newPriority, setNewPriority] = useState(props.newProjectData.priority);
+  const [newName, setNewName] = useState(props.newProjectData.name);
+  const [newDescription, setNewDescription] = useState(props.newProjectData.description);
+  const [newDue, setNewDue] = useState(props.newProjectData.due);
   
   useEffect(
     () => {
-      calculateProjectPriorityClass(props.oldProjectData.priority);
-      setNewName(props.oldProjectData.name);
-      setNewDescription(props.oldProjectData.description);
-      setNewDue(props.oldProjectData.due);
-      // setNewPriority(props.oldProjectData.priority);
+      calculateProjectPriorityClass(props.newProjectData.priority);
+      setNewPriority(props.newProjectData.priority);
+      setNewName(props.newProjectData.name);
+      setNewDescription(props.newProjectData.description);
+      setNewDue(props.newProjectData.due);
     },
-    [props.oldProjectData]
+    [props.newProjectData]
   );
 
   function calculateProjectPriorityClass(projectPriority) {
@@ -58,11 +58,10 @@ export default function CardProjectEditInfo(props) {
     
     setNewPriority(projectPriority);
     setProjectPriorityClass(result);
-    updateNewProjectData('priority', projectPriority);
+    // updateNewProjectData('priority', projectPriority);
   };
 
   function onPriorityInputChange(event) {
-    console.log(`TRIGGER! ${event.target.value}`);
     calculateProjectPriorityClass(event.target.value);
   }
 
@@ -99,6 +98,7 @@ export default function CardProjectEditInfo(props) {
   };
 
   function updateNewProjectData(property, value) {
+    console.log('TRIGGER');
     props.setNewProjectData(
       prevValue => {
         let result = {...prevValue, [property]: value};
@@ -135,9 +135,6 @@ export default function CardProjectEditInfo(props) {
         </div>
         <div className="group-3">
           <SectionProjectEditMembers
-            oldProjectData={props.oldProjectData}
-            oldTasksData={props.oldTasksData}
-            oldMembersData={props.oldMembersData}
             newProjectData={props.newProjectData}
             newTasksData={props.newTasksData}
             newMembersData={props.newMembersData}

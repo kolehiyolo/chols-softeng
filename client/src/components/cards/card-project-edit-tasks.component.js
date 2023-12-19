@@ -73,19 +73,20 @@ export default function CardProjectEditTasks(props) {
     setMyDoneTasks(resultsMy);
     setAllDoneTasks(resultsAll);
 
-    const projectIsDone = (resultsAll == tasks.length) ? true : false;
+    // const projectIsDone = (resultsAll == tasks.length) ? true : false;
+    
 
-    axios.post(
-      'http://localhost:5000/projects/done/' + props.projectData._id,
-      {
-        done: projectIsDone
-      }
-    )
-      .then(
-        () => {
+    // axios.post(
+    //   'http://localhost:5000/projects/done/' + props.projectData._id,
+    //   {
+    //     done: projectIsDone
+    //   }
+    // )
+    //   .then(
+    //     () => {
           
-        }
-      );
+    //     }
+    //   );
   };
 
   function handleAddTaskShow() {

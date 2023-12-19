@@ -46,7 +46,14 @@ export default function CardProjectInfo(props) {
             <h5 className="card-title">{props.projectData.name}</h5>
           </div>
           <div className="right">
-            <div className="project-priority alert alert-danger">{props.projectData.priority}</div>
+            <div className={
+              "project-priority alert alert-"
+              + ((props.projectData.priority === 'Low')
+              ? 'success'
+              : (props.projectData.priority === 'Medium')
+              ? 'warning'
+              : 'danger')
+            }>{props.projectData.priority}</div>
             <div className="priority-due alert alert-secondary">
               {new Date(props.projectData.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             </div>

@@ -20,7 +20,7 @@ import './page-project-edit.component.scss';
 export default function PageProjectEdit(props) {
   // console.log('MOUNT PageProjectEdit()');
   const [oldProjectData, setOldProjectData] = useState([]);
-  const [newProjectData, setNewProjectData] = useState();
+  const [newProjectData, setNewProjectData] = useState([]);
   const [oldTasksData, setOldTasksData] = useState();
   const [newTasksData, setNewTasksData] = useState();
   const [oldMembersData, setOldMembersData] = useState();
@@ -190,7 +190,7 @@ export default function PageProjectEdit(props) {
     // Save the newMembersData first
     // Run through newMembersData and check if any of the members are new
     // You can do this by checking the newMembersData with the oldMembersData
-    // TODO If newMember is not in oldMembersData, then it is a new member and you must do the ff:
+    // * If newMember is not in oldMembersData, then it is a new member and you must do the ff:
       // 1. Create an object for the newMemberData with {id: newMember._id, role: newMember.project_role}
       // 2. Add the newMemberData to newProjectData.members
       // 3. Do an axios.post request to http://localhost:5000/users/update/projects/:id with the body newMember.projects
@@ -206,81 +206,125 @@ export default function PageProjectEdit(props) {
     function saveNewMembersData() {
       newMembersData.forEach(newMember => {
         if (oldMembersData.some(oldMember => oldMember._id === newMember._id)) {
-          console.log('Old Member!');
+          // console.log('Old Member!');
           newProjectData.members.find(member => member._id === newMember._id).role = newMember.project_role;
-          console.log('newProjectData.members');
-          console.log(newProjectData.members);
-        } else {
-          console.log('New Member!');
 
-          console.log('Adding new member to newProjectData.members')
+          axios.post(`http://localhost:5000/projects/update/${newProjectData._id}`, newProjectData)
+                .then(res => console.log(res.data));
+          // console.log('newProjectData.members');
+          // console.log(newProjectData.members);
+        } else {
+          // console.log('New Member!');
+
+          // console.log('Adding new member to newProjectData.members')
           newProjectData.members.push({
             _id: newMember._id,
             role: newMember.project_role
           });
 
-          console.log('Adding project to newMemberProjectsList');
+          // console.log('Adding project to newMemberProjectsList');
           const newMemberProjectsList = {
             projects: newMember.projects
           };
-          console.log(newMemberProjectsList);
+          // console.log(newMemberProjectsList);
           axios.post(`http://localhost:5000/users/update/projects/${newMember._id}`, newMemberProjectsList)
             .then(res => console.log(res.data));
-          axios.post(`http://localhost:5000/users/update/projects/${newMember._id}`, {
-            projects: newMember.projects
-          })
-            .then(res => console.log(res.data));
+          axios.post(`http://localhost:5000/projects/update/${newProjectData._id}`, newProjectData)
+          .then(res => console.log(res.data));
         }
       });
 
       oldMembersData.forEach(oldMember => {
         if (newMembersData.some(newMember => newMember._id === oldMember._id)) {
-          console.log('Old Member! (Processed this already)');
+          // console.log('Old Member! (Processed this already)');
         } else {
-          console.log('Deleted Member!');
+          // console.log('Deleted Member!');
 
-          console.log('Removing member from newProjectData.members')
+          // console.log('Removing member from newProjectData.members')
           newProjectData.members = newProjectData.members.filter(member => member._id !== oldMember._id);
-          console.log(newProjectData.members);
+          // console.log(newProjectData.members);
 
-          console.log('Removing project from deletedMemberProjectsList');
+          // console.log('Removing project from deletedMemberProjectsList');
           const deletedMemberProjectsList = {
             projects: oldMember.projects.filter(project => project !== projectID)
           };
-          console.log(deletedMemberProjectsList);
+          // console.log(deletedMemberProjectsList);
           axios.post(`http://localhost:5000/users/update/projects/${oldMember._id}`, deletedMemberProjectsList)
             .then(res => console.log(res.data));
+
+          axios.post(`http://localhost:5000/projects/update/${newProjectData._id}`, newProjectData)
+              .then(res => console.log(res.data));
         }
       });
     };
-
-    saveNewMembersData();
-    // saveNewTasksData();
-    // saveNewProjectData();
-
+    
     function saveNewTasksData() {
+      newTasksData.forEach(newTask => {
+        if (oldTasksData.some(oldTask => oldTask._id === newTask._id)) {
+          console.log('Old Task!');
+          axios.post(`http://localhost:5000/tasks/update/${newTask._id}`, newTask)
+            .then(res => console.log(res.data));
+        } else {
+          console.log('New Task!');
+          const newTaskData = {
+            name: newTask.name,
+            start: newTask.start,
+            due: newTask.due,
+            done: false,
+            owner: newTask.owner,
+            project: newProjectData._id,
+            priority: newTask.priority,
+            description: newTask.description
+          }
+          axios.post(`http://localhost:5000/tasks/add`, newTaskData)
+            .then(res => {
+              console.log('New Task Added! ID:')
+              console.log(res.data);
+              newProjectData.tasks.push(res.data);
+              console.log(newProjectData.tasks);
 
+              axios.post(`http://localhost:5000/projects/update/${newProjectData._id}`, newProjectData)
+                .then(res => console.log(res.data));
+                // window.location.href='/project/' + newProjectData._id;
+            });
+        }
+      });
+
+      oldTasksData.forEach(oldTask => {
+        if (newTasksData.some(newTask => newTask._id === oldTask._id)) {
+          console.log('Old Task! (Processed this already)');
+        } else {
+          console.log('Deleted Task!');
+          axios.delete(`http://localhost:5000/tasks/${oldTask._id}`)
+            .then(res => console.log(res.data));
+          newProjectData.tasks = newProjectData.tasks.filter(task => task !== oldTask._id);
+
+          axios.post(`http://localhost:5000/projects/update/${newProjectData._id}`, newProjectData)
+                .then(res => console.log(res.data));
+        }
+      }); 
     };
-
-    function saveNewProjectData() {
-
-    };
-
+    
     // Save the newTasksData second
     // Run through newTasksData and check if any of the tasks are new
     // You can do this by checking the newTasksData with the oldTasksData
-    // If newTask is not in oldTasksData, then it is a new task and you must do the ff:
+    // * If newTask is not in oldTasksData, then it is a new task and you must do the ff:
       // 1. Create an object for the newTaskData
       // 3. Do an axios.post request to http://localhost:5000/tasks/add with the body newTaskData
       // 3. Get the response from the axios.post request
       // 3. Add the response, which is the new task's created _id to newProjectData.tasks
-    // If newTask is in oldTasksData, then it is an old task and you must do the ff:
+    // * If newTask is in oldTasksData, then it is an old task and you must do the ff:
       // 1. Create an object for the newTaskData
       // 3. Do an axios.post request to http://localhost:5000/tasks/update/:id with the body newTaskData
-    // If oldTask is not in newTasksData, then it is a deleted task and you must do the ff:
+    // * If oldTask is not in newTasksData, then it is a deleted task and you must do the ff:
       // 1. Do an axios.delete request to http://localhost:5000/tasks/:id
       // 2. Remove the oldTaskData._id from newProjectData.tasks
+
+        
     
+    saveNewMembersData();
+    saveNewTasksData();
+    // saveNewProjectData();
     // Save the newProjectData last
     // Do an axios.post request to http://localhost:5000/projects/update/:id with the body newProjectData
     // Redirect to the project page

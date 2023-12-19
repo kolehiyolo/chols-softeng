@@ -115,6 +115,10 @@ export default function PopupAddTask(props) {
     props.setNewTasksData(
       prevValue => {        
         const updatedTasksData = [...prevValue];
+        // Set updatedTasksData.start to new Date() if it's empty
+        if (updatedTasksData.start === '') {
+          updatedTasksData.start = new Date();
+        };
         updatedTasksData.push(updatedTaskData);
         
         // console.log(`updatedTasksData`);

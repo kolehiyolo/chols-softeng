@@ -59,7 +59,14 @@ export default function SectionProjectInfo(props) {
             <h5 className="card-title">{props.projectData.name}</h5>
           </div>
           <div className="right">
-            <div className="project-priority alert alert-danger">{props.projectData.priority}</div>
+            <div className={
+              "project-priority alert alert-"
+              + ((props.projectData.priority === 'Low')
+              ? 'success'
+              : (props.projectData.priority === 'Medium')
+              ? 'warning'
+              : 'danger')
+            }>{props.projectData.priority}</div>
             <div className="priority-due alert alert-secondary">
               {new Date(props.projectData.due).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
             </div>
@@ -76,8 +83,8 @@ export default function SectionProjectInfo(props) {
                     (projectMember) => {
                       return (
                         <ItemAvatarCircle
-                          userID={projectMember.id}
-                          key={projectMember.id}
+                          userID={projectMember._id}
+                          key={projectMember._id}
                         />
                       )
                     }
@@ -108,7 +115,7 @@ export default function SectionProjectInfo(props) {
               >
                 Edit
             </button>
-            <button 
+            {/* <button 
               className="delete btn btn-danger"
               onClick={
                 () => {
@@ -117,7 +124,7 @@ export default function SectionProjectInfo(props) {
               }
               >
                 Delete
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
