@@ -16,7 +16,7 @@ import ProjectNew from "./components/pages/page-project-new.component.js";
 import './App.scss';
 
 function App() {
-  // const [currentUser, setCurrentUser] = useState('65773b179407d34564bd6ed9');
+  // TODO Set currentUser detector
   const [currentUser] = useState('65773b179407d34564bd6ed9');
 
   return (

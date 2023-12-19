@@ -8,7 +8,9 @@
     "last": "Monkey"
   },
   "main_role": "Captain",
-  "projects": [],
+  "projects": [
+    "65773f7c9407d34564bd6ee7"
+  ],
   "profile_picture": "https://static.wikia.nocookie.net/onepiece/images/6/6d/Monkey_D._Luffy_Anime_Post_Timeskip_Infobox.png",
   "username": "futurePirateKing01",
   "password": "12341234",
@@ -35,7 +37,9 @@
     "last": "Roronoa"
   },
   "main_role": "Swordsman",
-  "projects": [],
+  "projects": [
+    "65773f7c9407d34564bd6ee7"
+  ],
   "profile_picture": "https://static.wikia.nocookie.net/onepiece/images/5/52/Roronoa_Zoro_Anime_Post_Timeskip_Infobox.png",
   "username": "greatestSwordsman02",
   "password": "12341234",
@@ -69,7 +73,9 @@
     "last": "Syrup"
   },
   "main_role": "Sniper",
-  "projects": [],
+  "projects": [
+    "65773f7c9407d34564bd6ee7"
+  ],
   "profile_picture": "https://static.wikia.nocookie.net/onepiece/images/3/35/Usopp_Anime_Post_Timeskip_Infobox.png",
   "username": "sniperKing04",
   "password": "12341234",

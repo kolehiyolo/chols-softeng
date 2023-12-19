@@ -29,15 +29,17 @@ export default function PageProjects(props) {
   // * This fetches all Projects from DB
   function fetchProjects() {
     console.log(`RUN PageProjects -> fetchProjects()`); 
-    axios.get('http://localhost:5000/projects')
-      .then(
-        res => {
-          const projects = res.data;
-          console.log(` - Success! ${projects.length} projects found`);
-          console.log(`\n`);
-          setProjects(projects);
-        }
-      )
+    axios.get('http://localhost:5000/users/' + props.currentUser)
+      .then(res => {
+        const user = res.data;
+        axios.get('http://localhost:5000/projects')
+          .then(res => {
+            const projects = res.data.filter(project => user.projects.includes(project._id));
+            console.log(` - Success! ${projects.length} projects found`);
+            console.log(`\n`);
+            setProjects(projects);
+          });
+      });
   };
 
   // * When "Add New" is clicked
