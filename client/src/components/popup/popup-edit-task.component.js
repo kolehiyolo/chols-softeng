@@ -246,7 +246,7 @@ export default function PopupEditTask(props) {
             <div className="group-4">
               <label htmlFor="task_name" className="form-label">Task</label>
               <DatePicker
-                selected={updatedTaskData.due} 
+                selected={new Date(updatedTaskData.due)} 
                 onChange={onDateChange}
               />
             </div>
