@@ -10,9 +10,9 @@ export default function Navbar() {
           <li className="navbar-item">
             <Link to="/" className="nav-link">Projects</Link>
           </li>
-          <li className="navbar-item">
+          {/* <li className="navbar-item">
             <Link to="/calendar" className="nav-link">Calendar</Link>
-          </li>
+          </li> */}
           <li className="navbar-item">
             <Link to="/profile" className="nav-link">Profile</Link>
           </li>

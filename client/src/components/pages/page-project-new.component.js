@@ -192,7 +192,7 @@ export default function PageProjectNew(props) {
       });
     }    
   
-    function saveNewMembersData() {
+    function saveNewMembersData(newProjectID) {
       console.log('saveNewMembersData()');
       const memberPromises = newMembersData.map(newMember => {
         console.log('New Member!');
@@ -201,10 +201,13 @@ export default function PageProjectNew(props) {
           role: newMember.project_role
         });
   
-        const newMemberProjectsList = {
+        let newMemberProjectsList = {
           projects: newMember.projects
         };
+
+        newMemberProjectsList.projects.push(newProjectID);
   
+        console.log(newMemberProjectsList);
         return axios.post(`http://localhost:5000/users/update/projects/${newMember._id}`, newMemberProjectsList);
       });
   
@@ -240,7 +243,7 @@ export default function PageProjectNew(props) {
       axios.post(`http://localhost:5000/projects/update/${newProjectID}/newTask`, newProjectData)
         .then(res => {
           console.log(res.data);
-          window.location.href=`/project/${newProjectID}`;
+          // window.location.href=`/project/${newProjectID}`;
         });
     };
   
