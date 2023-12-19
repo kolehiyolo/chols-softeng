@@ -1,66 +1,113 @@
-I have the ff JSON
-[{
-  "_id": {
-    "$oid": "65773f7c9407d34564bd6ee7"
-  },
-  "name": "Beat Kaido",
-  "description": "We need to beat the Yonko, and we'll do Kaido first",
-  "priority": "High",
-  "done": false,
-  "start": "2023-12-12",
-  "due": "2023-12-31",
-  "members": [
-    {
-      "_id": "65773b179407d34564bd6ed9",
-      "role": "Captain"
-    },
-    {
-      "_id": "65773bd49407d34564bd6edb",
-      "role": "Swordsman"
-    },
-    {
-      "_id": "65773c7c9407d34564bd6edd",
-      "role": "Thing"
-    }
-  ],
-  "tasks": [
-    {
-      "_id": "657741469407d34564bd6ef6"
-    },
-    {
-      "_id": "657741629407d34564bd6ef7"
-    },
-    {
-      "_id": "6577416c9407d34564bd6ef8"
-    },
-    {
-      "_id": "6577417a9407d34564bd6ef9"
-    },
-    {
-      "_id": "6577419b9407d34564bd6efc"
-    },
-    {
-      "_id": "657741a59407d34564bd6efd"
-    },
-    {
-      "_id": "657741b19407d34564bd6efe"
-    },
-    {
-      "_id": "657741c09407d34564bd6eff"
-    },
-    {
-      "_id": "657741ca9407d34564bd6f00"
-    },
-    {
-      "_id": "657741d49407d34564bd6f01"
-    },
-    {
-      "_id": "657741e39407d34564bd6f02"
-    },
-    {
-      "_id": "657741ec9407d34564bd6f03"
-    }
-  ]
-}]
+It's not working. Here's my latest code
+function saveProject() {
+    console.log('Saving Project');
+    setShowSaveModal(false);
+    console.log('oldProjectData');
+    console.log(oldProjectData);
+    console.log('newProjectData');
+    console.log(newProjectData);
+    console.log('oldTasksData');
+    console.log(oldTasksData);
+    console.log('newTasksData');
+    console.log(newTasksData);
+    console.log('oldMembersData');
+    console.log(oldMembersData);
+    console.log('newMembersData');
+    console.log(newMembersData);
 
-When I console.log the value of the one object in it, "tasks" isn't being read. Is it because it's just a bunch of objects with _id and nothing else?
+    let finalProjectData = {...newProjectData};
+    
+    function saveNewMembersData() {
+      return new Promise((resolve, reject) => {
+        newMembersData.forEach(newMember => {
+          if (oldMembersData.some(oldMember => oldMember._id === newMember._id)) {
+            finalProjectData.members.find(member => member._id === newMember._id).role = newMember.project_role;
+          } else {
+            finalProjectData.members.push({
+              _id: newMember._id,
+              role: newMember.project_role
+            });
+    
+            const newMemberProjectsList = {
+              projects: newMember.projects
+            };
+            axios.post(`http://localhost:5000/users/update/projects/${newMember._id}`, newMemberProjectsList)
+              .then(res => console.log(res.data));
+          }
+        });
+    
+        oldMembersData.forEach(oldMember => {
+          if (newMembersData.some(newMember => newMember._id === oldMember._id)) {
+            // console.log('Old Member! (Processed this already)');
+          } else {
+            finalProjectData.members = finalProjectData.members.filter(member => member._id !== oldMember._id);
+            const deletedMemberProjectsList = {
+              projects: oldMember.projects.filter(project => project !== projectID)
+            };
+            axios.post(`http://localhost:5000/users/update/projects/${oldMember._id}`, deletedMemberProjectsList)
+              .then(res => console.log(res.data));
+          }
+        });
+        resolve();
+      });
+    }
+  
+    function saveNewTasksData() {
+      return new Promise((resolve, reject) => {
+        newTasksData.forEach(newTask => {
+          if (oldTasksData.some(oldTask => oldTask._id === newTask._id)) {
+            console.log('Old Task!');
+            axios.post(`http://localhost:5000/tasks/update/${newTask._id}`, newTask)
+              .then(res => console.log(res.data));
+          } else {
+            console.log('New Task!');
+            const newTaskData = {
+              name: newTask.name,
+              start: newTask.start,
+              due: newTask.due,
+              done: false,
+              owner: newTask.owner,
+              project: newProjectData._id,
+              priority: newTask.priority,
+              description: newTask.description
+            }
+            axios.post(`http://localhost:5000/tasks/add`, newTaskData)
+              .then(res => {
+                console.log('New Task Added! ID: ' + res.data._id);
+                finalProjectData.tasks.push(res.data._id);
+                // console.log(finalProjectData.tasks);
+              });
+          }
+        });
+    
+        oldTasksData.forEach(oldTask => {
+          if (newTasksData.some(newTask => newTask._id === oldTask._id)) {
+            console.log('Old Task! (Processed this already)');
+          } else {
+            console.log('Deleted Task!');
+            axios.delete(`http://localhost:5000/tasks/${oldTask._id}`)
+              .then(res => console.log(res.data));
+            finalProjectData.tasks = finalProjectData.tasks.filter(task => task !== oldTask._id);  
+          }
+        }); 
+        resolve();
+      });
+    }
+  
+    function finalProjectSave() {
+      console.log('finalProjectSave()');
+      console.log('finalProjectData');
+      console.log(finalProjectData);
+      axios.post(`http://localhost:5000/projects/update/${newProjectData._id}/newTask`, finalProjectData)
+        .then(res => console.log(res.data));
+    };
+  
+    Promise.all([saveNewMembersData(), saveNewTasksData()])
+      .then(() => finalProjectSave())
+      .catch(error => console.error(error));
+  };
+
+
+
+
+  saveNewTasksData has axios.post(`http://localhost:5000/tasks/add`, newTaskData) and that's notdone yet but finalProjectSave() is already running

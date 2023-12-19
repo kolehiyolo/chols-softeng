@@ -190,6 +190,10 @@ router.route('/update/:id/:from').post(
           project.members = req.body.members;
           project.tasks = req.body.tasks;
 
+
+          console.log('req.body.tasks');
+          console.log(req.body.tasks);
+
           console.log(`${timestamp} - updatedProject: `);
           console.log(project);
           console.log(`\n`);

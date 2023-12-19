@@ -188,83 +188,98 @@ export default function PageProjectEdit(props) {
     console.log(oldMembersData);
     console.log('newMembersData');
     console.log(newMembersData);
+
+    let finalProjectData = {...newProjectData};
     
     function saveNewMembersData() {
-      newMembersData.forEach(newMember => {
-        if (oldMembersData.some(oldMember => oldMember._id === newMember._id)) {
-          newProjectData.members.find(member => member._id === newMember._id).role = newMember.project_role;
-        } else {
-          newProjectData.members.push({
-            _id: newMember._id,
-            role: newMember.project_role
-          });
-  
-          const newMemberProjectsList = {
-            projects: newMember.projects
-          };
-          axios.post(`http://localhost:5000/users/update/projects/${newMember._id}`, newMemberProjectsList)
-            .then(res => console.log(res.data));
-        }
-      });
-  
-      oldMembersData.forEach(oldMember => {
-        if (newMembersData.some(newMember => newMember._id === oldMember._id)) {
-          // console.log('Old Member! (Processed this already)');
-        } else {
-          newProjectData.members = newProjectData.members.filter(member => member._id !== oldMember._id);
-          const deletedMemberProjectsList = {
-            projects: oldMember.projects.filter(project => project !== projectID)
-          };
-          axios.post(`http://localhost:5000/users/update/projects/${oldMember._id}`, deletedMemberProjectsList)
-            .then(res => console.log(res.data));
-        }
-      });
-    };
-    
-    function saveNewTasksData() {
-      newTasksData.forEach(newTask => {
-        if (oldTasksData.some(oldTask => oldTask._id === newTask._id)) {
-          console.log('Old Task!');
-          axios.post(`http://localhost:5000/tasks/update/${newTask._id}`, newTask)
-            .then(res => console.log(res.data));
-        } else {
-          console.log('New Task!');
-          const newTaskData = {
-            name: newTask.name,
-            start: newTask.start,
-            due: newTask.due,
-            done: false,
-            owner: newTask.owner,
-            project: newProjectData._id,
-            priority: newTask.priority,
-            description: newTask.description
-          }
-          axios.post(`http://localhost:5000/tasks/add`, newTaskData)
-            .then(res => {
-              console.log('New Task Added! ID:')
-              console.log(res.data);
-              newProjectData.tasks.push(res.data);
-              console.log(newProjectData.tasks);
+      return new Promise((resolve, reject) => {
+        newMembersData.forEach(newMember => {
+          if (oldMembersData.some(oldMember => oldMember._id === newMember._id)) {
+            finalProjectData.members.find(member => member._id === newMember._id).role = newMember.project_role;
+          } else {
+            finalProjectData.members.push({
+              _id: newMember._id,
+              role: newMember.project_role
             });
-        }
+    
+            const newMemberProjectsList = {
+              projects: newMember.projects
+            };
+            axios.post(`http://localhost:5000/users/update/projects/${newMember._id}`, newMemberProjectsList)
+              .then(res => console.log(res.data));
+          }
+        });
+    
+        oldMembersData.forEach(oldMember => {
+          if (newMembersData.some(newMember => newMember._id === oldMember._id)) {
+            // console.log('Old Member! (Processed this already)');
+          } else {
+            finalProjectData.members = finalProjectData.members.filter(member => member._id !== oldMember._id);
+            const deletedMemberProjectsList = {
+              projects: oldMember.projects.filter(project => project !== projectID)
+            };
+            axios.post(`http://localhost:5000/users/update/projects/${oldMember._id}`, deletedMemberProjectsList)
+              .then(res => console.log(res.data));
+          }
+        });
+        resolve();
       });
+    }
   
-      oldTasksData.forEach(oldTask => {
-        if (newTasksData.some(newTask => newTask._id === oldTask._id)) {
-          console.log('Old Task! (Processed this already)');
-        } else {
-          console.log('Deleted Task!');
-          axios.delete(`http://localhost:5000/tasks/${oldTask._id}`)
-            .then(res => console.log(res.data));
-          newProjectData.tasks = newProjectData.tasks.filter(task => task !== oldTask._id);  
-        }
-      }); 
-    };
+    function saveNewTasksData() {
+      return new Promise((resolve, reject) => {
+        let promises = [];
+    
+        newTasksData.forEach(newTask => {
+          if (oldTasksData.some(oldTask => oldTask._id === newTask._id)) {
+            console.log('Old Task!');
+            promises.push(axios.post(`http://localhost:5000/tasks/update/${newTask._id}`, newTask)
+              .then(res => console.log(res.data)));
+          } else {
+            console.log('New Task!');
+            const newTaskData = {
+              name: newTask.name,
+              start: newTask.start,
+              due: newTask.due,
+              done: false,
+              owner: newTask.owner,
+              project: newProjectData._id,
+              priority: newTask.priority,
+              description: newTask.description
+            }
+            promises.push(axios.post(`http://localhost:5000/tasks/add`, newTaskData)
+              .then(res => {
+                console.log('New Task Added! ID: ' + res.data._id);
+                finalProjectData.tasks.push(res.data._id);
+                // console.log(finalProjectData.tasks);
+              }));
+          }
+        });
+    
+        oldTasksData.forEach(oldTask => {
+          if (newTasksData.some(newTask => newTask._id === oldTask._id)) {
+            console.log('Old Task! (Processed this already)');
+          } else {
+            console.log('Deleted Task!');
+            promises.push(axios.delete(`http://localhost:5000/tasks/${oldTask._id}`)
+              .then(res => console.log(res.data)));
+            finalProjectData.tasks = finalProjectData.tasks.filter(task => task !== oldTask._id);  
+          }
+        }); 
+    
+        Promise.all(promises).then(() => resolve());
+      });
+    }
   
     function finalProjectSave() {
       console.log('finalProjectSave()');
-      axios.post(`http://localhost:5000/projects/update/${newProjectData._id}/newTask`, newProjectData)
-        .then(res => console.log(res.data));
+      console.log('finalProjectData');
+      console.log(finalProjectData);
+      axios.post(`http://localhost:5000/projects/update/${newProjectData._id}/newTask`, finalProjectData)
+        .then(res => {
+          console.log(res.data);
+          window.location.href=`/project/${newProjectData._id}`;
+        });
     };
   
     Promise.all([saveNewMembersData(), saveNewTasksData()])

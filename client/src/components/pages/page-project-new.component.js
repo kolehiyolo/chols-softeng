@@ -238,7 +238,10 @@ export default function PageProjectNew(props) {
     function finalProjectSave(newProjectID) {
       console.log('finalProjectSave()');
       axios.post(`http://localhost:5000/projects/update/${newProjectID}/newTask`, newProjectData)
-        .then(res => console.log(res.data));
+        .then(res => {
+          console.log(res.data);
+          window.location.href=`/project/${newProjectID}`;
+        });
     };
   
     saveNewProjectData()
